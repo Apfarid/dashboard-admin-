@@ -16,8 +16,13 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
 
 import { mainListItems, secondaryListItems } from "../listItems";
 import Chart from "../Chart";
@@ -118,6 +123,13 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+
+  buttonProfile: {
+    color : '#fff',
+    border: '2px solid #ffde2e',
+    margin:0,
+    padding:0
+  }
 }));
 
 export default function Dashboard({ children }) {
@@ -130,6 +142,14 @@ export default function Dashboard({ children }) {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   return (
     <div className={classes.root}>
@@ -158,13 +178,24 @@ export default function Dashboard({ children }) {
             noWrap
             className={classes.title}
           >
-           Easy Credit
+            Easy Credit
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+
+          <IconButton aria-label="delete" className={classes.buttonProfile} onClick={handleClick}>
+            <AccountCircleIcon fontSize="large" />
           </IconButton>
+
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>Perfil</MenuItem>
+            <MenuItem onClick={handleClose}>Mi cuenta</MenuItem>
+            <MenuItem onClick={handleClose}>Salir</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <Drawer
