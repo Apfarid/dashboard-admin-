@@ -15,6 +15,7 @@ import DetalleAntiguo from './components/GestorCreditoAntiguos/DetalleCreditoAnt
 import Historico from './components/Orders'
 import Informes from './views/informes/VistaInformes'
 import Claves from './views/gestorClaves/GestorClavesV'
+import Facturacion from './views/facturacion/Facturacion'
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
         <Route exact path="/historico-cliente" component = {Historico}/>
         <Route exact path="/informes" component = {Informes}/>
         <Route exact path="/gestor-claves" component = {Claves}/>
+        <Route exact path="/facturacion" component = {Facturacion}/>
         
 
 

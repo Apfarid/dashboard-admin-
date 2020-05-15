@@ -149,12 +149,7 @@ export default function ScrollableTabsButtonForce() {
                     label="Cancelados"
                     {...a11yProps(6)}
                   />
-                  <Tab
-                    className="onetab"
-                    label="facturacion"
-                    {...a11yProps(7)}
-                  />
-
+                  
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
