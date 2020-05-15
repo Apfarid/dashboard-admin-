@@ -112,6 +112,7 @@ export default function DisplayCreditosHome({titulo}) {
   return (
     <Container>
       <Title>{titulo}</Title>
+      <br/>
       <Grid Container className={classes.box}>
         <div className={classes.row}>
           <Grid item xs={12}>

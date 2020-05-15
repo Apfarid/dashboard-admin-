@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative'
   },
   fixedHeight: {
-    height: 370,
+    height: 405,
   },
   fixedHeightDos: {
     height: 300,
