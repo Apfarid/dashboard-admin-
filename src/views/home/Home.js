@@ -24,7 +24,7 @@ import { mainListItems, secondaryListItems } from '../../components/listItems';
 import Chart from '../../components/Chart';
 import Deposits from '../../components/Deposits';
 import Orders from '../../components/Orders';
-import DisplayNuevos from '../../components/displaynuevos/DisplayNuevos'
+import DisplayNuevos from '../../components/displaynuevos/DisplayCreditosHome'
 import DisplayViejos from '../../components/displayViejos/DisplayViejos';
 
 
@@ -64,13 +64,13 @@ export default function Dashboard() {
             {/* Creditos Nuevos */}
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
-                <DisplayNuevos/>
+                <DisplayNuevos titulo={'Créditos Nuevos'}/>
               </Paper>
             </Grid>
             {/* Creditos Viejos */}
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
-                <DisplayViejos/>
+              <DisplayNuevos titulo={'Créditos Antiguos'}/>
               </Paper>
             </Grid>
             {/* Chart */}
