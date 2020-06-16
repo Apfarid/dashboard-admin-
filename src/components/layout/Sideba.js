@@ -6,10 +6,12 @@ import Drawer from "@material-ui/core/Drawer";
 import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import { Hidden } from "@material-ui/core";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
+import Logo from "../../img/logoBlanco.png";
 import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -129,7 +131,20 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #ffde2e',
     margin:0,
     padding:0
-  }
+  },
+  items: {
+    display: "flex",
+    alignItems: "center",
+  },
+  saludo: {
+    marginRight: 20,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  logo: {
+    width: 180,
+    height: 50,
+  },
 }));
 
 export default function Dashboard({ children }) {
@@ -178,12 +193,21 @@ export default function Dashboard({ children }) {
             noWrap
             className={classes.title}
           >
-            Easy Credit
+             <img src={Logo} className={classes.logo} />
           </Typography>
 
-          <IconButton aria-label="delete" className={classes.buttonProfile} onClick={handleClick}>
-            <AccountCircleIcon fontSize="large" />
-          </IconButton>
+          <div className={classes.items}>
+            <Hidden only={["xs", "sm"]}>
+              <span className={classes.saludo}>Hola xxxxxxxxx </span>
+            </Hidden>
+            <IconButton
+              aria-label="delete"
+              className={classes.buttonProfile}
+              onClick={handleClick}
+            >
+              <AccountCircleIcon fontSize="large" />
+            </IconButton>
+          </div>
 
           <Menu
             id="simple-menu"

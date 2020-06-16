@@ -25,7 +25,7 @@ import Chart from "../../components/Chart";
 import Deposits from "../../components/Deposits";
 import Orders from "../../components/Orders";
 import DisplayViejos from "../../components/displayViejos/DisplayViejos";
-import GestorCreditoNuevo from "../../components/creditosNuevos/solicitudes/ListaSolicitudCreditoNuevo";
+import ListaConDocumentos from "../../components/creditosNuevos/conDocumentos/ListaConDocumentosCreditoNuevo";
 
 const drawerWidth = 240;
 
@@ -59,7 +59,7 @@ export default function GestorCreditos() {
       <Grid container spacing={3}>
         {/* Creditos Nuevos */}
         <Grid item xs={12} md={12} lg={12}>
-          <GestorCreditoNuevo />
+          <ListaConDocumentos />
         </Grid>
       </Grid>
     </Container>

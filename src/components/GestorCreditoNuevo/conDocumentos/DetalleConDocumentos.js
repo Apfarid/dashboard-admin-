@@ -1,6 +1,6 @@
 import React from 'react';
 
-const GestorCreditoNuevo = () => {
+const DetalleConDocumentos = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const GestorCreditoNuevo = () => {
   );
 };
 
-export default GestorCreditoNuevo;
+export default DetalleConDocumentos;

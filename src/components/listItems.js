@@ -17,7 +17,7 @@ import AssessmentIcon from '@material-ui/icons/Assessment';
 
 export const mainListItems = (
   <div>
-    <ListItem button component={Link} to="/">
+    <ListItem button component={Link} to="/"> 
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>

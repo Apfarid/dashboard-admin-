@@ -24,7 +24,7 @@ import { mainListItems, secondaryListItems } from '../../components/listItems';
 import Chart from '../../components/Chart';
 import Deposits from '../../components/Deposits';
 import Orders from '../../components/Orders';
-import DisplayNuevos from '../../components/displaynuevos/DisplayCreditosHome'
+
 import DisplayViejos from '../../components/displayViejos/DisplayViejos';
 import InformeFacturacion from '../../components/InformeFacturacion'
 

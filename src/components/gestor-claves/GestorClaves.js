@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect } from "react";
 import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
@@ -9,43 +9,29 @@ import Title from "../Title";
 import InfoIcon from "@material-ui/icons/Info";
 import { Link as Lino } from "react-router-dom";
 import Link from "@material-ui/core/Link";
-import clienteAxios from '../../config/axios'
+import clienteAxios from "../../config/axios";
+import { useSelector } from "react-redux";
 
 const GestorDatosPersonales = () => {
-  
-  const [informacionCliente, setInformacionCliente] = useState([]);
-  const consultarAPI = async () => {
-    const cliente = await clienteAxios.get('/clientes')
-    setInformacionCliente(cliente.data);
-    
-  }
-  
-  useEffect( ()=>{
-    consultarAPI()
-    
-    
-  },[informacionCliente])
 
+  const [clientes, setClientes] = useState([ ]);
 
-  
-  
+  const firmas = useSelector((state) => state.numeroCreditos.contador);
 
+  let data = firmas.map((dato) => {
+    return {
+      Cedula: dato.cliente.cedula,
+      consecutivo: dato.id,
+      nombre: dato.cliente.nombres + " " + dato.cliente.apellidos,
+      claveCorta: dato.firmaCorta,
+      claveLarga: dato.firmaLarga,
+      fechaCreacion: dato.fechaFirma,
+    };
+  });
 
-
-
-
-  const [clientes, setClientes] = useState(
-    [
-      ["****", "***** ", "******", "*******", "******"],
-
-    ]
-  );
-
-
-
-  
-  
-
+  useEffect(() => {
+    setClientes(data);
+  }, []);
 
   const columns = [
     {
@@ -57,20 +43,30 @@ const GestorDatosPersonales = () => {
     },
 
     {
+      label:"Consecutivo",
       name: "consecutivo",
       options: {
         filter: true,
       },
     },
     {
-      name: "Clave Corta",
+      label:"Nombre",
+      name: "nombre",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label:"Clave Corta",
+      name: "claveCorta",
       options: {
         filter: true,
       },
     },
 
     {
-      name: "Clave Larga",
+      label:"Clave Larga",
+      name: "claveLarga",
       options: {
         filter: true,
       },
@@ -83,47 +79,6 @@ const GestorDatosPersonales = () => {
       },
     },
 
-    {
-      name: "Informacion",
-      options: {
-        filter: false,
-        sort: false,
-        empty: true,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <Fragment>
-              <Link
-                component="button"
-                variant="body2"
-                //component={Lino}
-                //to="informacion-personal"
-              >
-                <InfoIcon
-                  buttom
-                  aria-label="delete"
-                  disabled
-                  color="primary"
-                />
-              </Link>
-              <Link
-                component="button"
-                variant="body2"
-                //component={Lino}
-                //to="/historico-cliente"
-              >
-                <HistoryIcon
-                  buttom
-                  aria-label="delete"
-                  disabled
-                  color="primary"
-                />
-              </Link>
-            </Fragment>
-          );
-        },
-      },
-    },
-   
   ];
 
   const options = {
@@ -139,22 +94,15 @@ const GestorDatosPersonales = () => {
       console.log("numberOfRows: ", numberOfRows),
     onChangePage: (currentPage) => console.log("currentPage: ", currentPage),
   };
-  
-
-
-
-
-
-
 
   return (
-<MUIDataTable
-        title={"Gestor de Claves"}
-        //data={informacionCliente.map( cliente => [cliente.cedula, cliente.nombres, cliente.apellidos])}
-        data={clientes}
-        columns={columns}
-        options={options}
-      />
+    <MUIDataTable
+      title={"Consulta Claves"}
+      //data={informacionCliente.map( cliente => [cliente.cedula, cliente.nombres, cliente.apellidos])}
+      data={clientes}
+      columns={columns}
+      options={options}
+    />
   );
 };
 

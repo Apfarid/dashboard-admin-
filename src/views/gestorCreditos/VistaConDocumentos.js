@@ -25,7 +25,7 @@ import Chart from "../../components/Chart";
 import Deposits from "../../components/Deposits";
 import Orders from "../../components/Orders";
 import DisplayViejos from "../../components/displayViejos/DisplayViejos";
-import GestorCreditoNuevo from "../../components/creditosNuevos/solicitudes/ListaSolicitudCreditoNuevo";
+import GestorConDocumentos from "../../components/creditosNuevos/conDocumentos/DetalleConDocumentosCreditoNuevo";
 
 const drawerWidth = 240;
 
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GestorCreditos() {
+export default function VistaConDocumentos() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fixedHeightPaperDos = clsx(classes.paper, classes.fixedHeightDos);
@@ -59,7 +59,7 @@ export default function GestorCreditos() {
       <Grid container spacing={3}>
         {/* Creditos Nuevos */}
         <Grid item xs={12} md={12} lg={12}>
-          <GestorCreditoNuevo />
+          <GestorConDocumentos />
         </Grid>
       </Grid>
     </Container>

@@ -4,11 +4,10 @@ import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import CreateIcon from '@material-ui/icons/Create';
+import CreateIcon from "@material-ui/icons/Create";
 import Link from "@material-ui/core/Link";
-
 import { Link as Lino } from "react-router-dom";
-
+import clienteAxios from "../../../config/axios";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -18,6 +17,9 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { solicitudNuevos } from "../../../actions/solicitudCreditoNuevoAction";
+import { useDispatch, useSelector } from "react-redux";
+import DatosListaSolicitudCreditoNuevo from './DatosListaSolicitudCreditoNuevo'
 
 const useStyles = makeStyles({
   table: {
@@ -40,11 +42,19 @@ const rows = [
 const SolicitudesV = () => {
   const classes = useStyles();
 
-  const [state, setState] = useState([
-    ["22222", "c001", "$100.000", "15", "Aprobada"],
-  ]);
-  //console.log(state);
+  const creditosFiltrados = useSelector(
+    (state) => state.solicitudCreditosNuevos.solicitudes
+  );
 
+  let creditosFiltrado = creditosFiltrados.filter(credito => credito.solicitudCredito === true && credito.solicitarDocumentos === null)
+
+
+  const solicitudesDispatch = useDispatch();
+
+  useEffect(() => {
+    const solicitudesNuevas = () => solicitudesDispatch(solicitudNuevos());
+    solicitudesNuevas();
+  }, []);
 
   return (
     <TableContainer component={Paper}>
@@ -52,40 +62,27 @@ const SolicitudesV = () => {
         <TableHead>
           <TableRow>
             <TableCell align="center">ID</TableCell>
-            <TableCell align="center">Consecutivo</TableCell>
-            <TableCell align="center">Monto</TableCell>
-            <TableCell align="center">Plazo</TableCell>
-            <TableCell align="center">Estado de Solicitud</TableCell>
+            <TableCell align="center">cedula</TableCell>
+            <TableCell align="center">Nombres</TableCell>
+            <TableCell align="center">Monto Solicitado</TableCell>
             <TableCell align="center">botones</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {state[0].map((item) => (
-            <TableRow key={item.id}>
-              <TableCell align="center">{item.id}</TableCell>
-              <TableCell align="center">{item.id}</TableCell>
-              <TableCell align="center">{item.valorPrestamo}</TableCell>
-              <TableCell align="center">{item.diasPrestamo}</TableCell>
-              <TableCell align="center">{item.id}</TableCell>
-              <TableCell align="center">
-              <Link
-                component="button"
-                variant="body2"
-                component={Lino}
-                to={`/gestor-creditos/${item.clienteId}`}
-              >
-                <CreateIcon  
-                  color="primary"
-                />
-              </Link>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+        <tbody>
+          {creditosFiltrado.length === 0
+            ? "No hay Solicitudes"
+            : creditosFiltrado.map((solicitud) => (
+                <DatosListaSolicitudCreditoNuevo solicitud={solicitud} key={solicitud.id} />
+              ))}
+        </tbody>
       </Table>
     </TableContainer>
   );
 };
 
+//["cedula", "consecutivo", "$monto", "dias", "estado"],
 export default SolicitudesV;
 
+/**
+ *
+ */

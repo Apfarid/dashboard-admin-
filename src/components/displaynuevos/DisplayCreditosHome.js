@@ -15,11 +15,18 @@ import Container from "@material-ui/core/Container";
 import Title from "../Title";
 import { Link as Lino } from "react-router-dom";
 import clienteAxios from "../../config/axios";
-import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import HourglassFullIcon from '@material-ui/icons/HourglassFull';
-import DoneAllIcon from '@material-ui/icons/DoneAll';
+import MarkunreadMailboxIcon from "@material-ui/icons/MarkunreadMailbox";
+import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import HourglassFullIcon from "@material-ui/icons/HourglassFull";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
+import { useSelector } from "react-redux";
+import ReplayIcon from "@material-ui/icons/Replay";
+import PreaprobadosconDocumentos from "./PreaprobadosconDocumentos";
+import PreaprobadosSinDocumentos from "./PreaprobadosSinDocumentos";
+import SolicitudesContador from "./SolicitudesContador";
+import AprobadoContador from "./AprobadoContador";
+import RenovacionContador from "./RenovacionContador";
 
 const useStyles = makeStyles({
   root: {
@@ -91,138 +98,76 @@ const useStyles = makeStyles({
   },
 });
 
-export default function DisplayCreditosHome({titulo}) {
+/**diasPrestamo(pin):20
+valorSolicitado(pin):540000
+fechaDesembolso(pin):null
+plataforma(pin):21000
+administracion(pin):34000
+interes(pin):7484.412000000001
+interesMoratorio(pin):null
+impuesto(pin):10450
+valorAprobado(pin):600000
+firmaCorta(pin):"3CGk01Aex"
+firmaLarga(pin):"0adea78c-70e5-47e3-82d1-1b41dba61d30"
+fechaFirma(pin):null
+creacionFirma(pin):null
+solicitudCredito(pin):true
+reFinanciado(pin):null
+rechazado(pin):null
+preAprobado(pin):true
+aprobado(pin):true
+desembolsado(pin):true
+cancelado(pin):null
+fechaRechazado(pin):null
+fechaPreaprobado(pin):"2020-05-31"
+fechaDesembolsado(pin):"2020-05-31"
+fechaSolicitado(pin):"2020-05-31"
+fechaAprobado(pin):"2020-05-31"
+fechaCancelado(pin):null
+solicitarDocumentos(pin):"si"
+clienteId(pin):2 */
+
+export default function DisplayCreditosHome({ titulo }) {
   const classes = useStyles();
 
-  const [creditos, setCreditos] = useState([]);
-
-  useEffect(() => {
-    const consultarAPI = async () => {
-      //obtener pedidos
-      const resultados = await clienteAxios.get("/solicitud-credito");
-      setCreditos(resultados.data);
-    };
-
-    consultarAPI();
-  }, []);
-
-  const credito = creditos[0];
-  const numero = new Set(credito);
+  const cantidadCreditos = useSelector(
+    (state) => state.solicitudCreditosNuevos.solicitudes
+  );
+  
 
   return (
     <Container>
       <Title>{titulo}</Title>
-      <br/>
+      <br />
       <Grid Container className={classes.box}>
         <div className={classes.row}>
           <Grid item xs={12}>
             <div className={classes.contenido}>
-              <Link
-                className={classes.a}
-                underline={"none"}
-                component="button"
-                component={Lino}
-                to="/gestor-nuevo-credito"
-              >
-                <div className={classes.group}>
-                  <MarkunreadMailboxIcon className={classes.icon} />
-                  <p>Solicitudes</p>
-                </div>
-                <span className={classes.span}>{numero.size}</span>
-              </Link>
+              <SolicitudesContador />
             </div>
           </Grid>
           <Grid item xs={12}>
-            <Link className={classes.a} underline={"none"} component="button">
-              <div className={classes.group}>
-                <AssignmentLateTwoToneIcon className={classes.icon} />
-                <p>Rechazados</p>
-              </div>
-              <span className={classes.span}>10</span>
-            </Link>
+            <AprobadoContador />
           </Grid>
         </div>
         <Divider />
         <div className={classes.row}>
           <Grid item xs={12}>
-            <div className={classes.contenido}>
-              <Link className={classes.a} underline={"none"} component="button">
-                <div className={classes.group}>
-                  <HourglassEmptyIcon className={classes.icon} />
-                  <p>
-                    Pre-Aprobacion <br />
-                    sin Documentos
-                  </p>
-                </div>
-                <span className={classes.span}>10</span>
-              </Link>
-            </div>
+            <PreaprobadosSinDocumentos />
           </Grid>
           <Grid item xs={12}>
-            <Link className={classes.a} underline={"none"} component="button"> 
-              <div className={classes.group}>
-                <HourglassFullIcon className={classes.icon} />
-                <p>
-                  Pre-Aprobacion <br />
-                  con Documentos
-                </p>
-              </div>
-              <span className={classes.span}>10</span>
-            </Link>
+            <PreaprobadosconDocumentos />
           </Grid>
         </div>
 
-        <Divider />
-
-        <div className={classes.row}>
-          <Grid item xs={12}>
-            <div className={classes.contenido}>
-              <Link
-                className={classes.a}
-                underline={"none"}
-                component="button"
-                component={Lino}
-                to="/gestor-nuevo-credito"
-              >
-                <div className={classes.group}>
-                  <AssignmentTurnedInTwoToneIcon className={classes.icon} />
-                  <p>Aprobados</p>
-                </div>
-                <span className={classes.span}>{numero.size}</span>
-              </Link>
-            </div>
-          </Grid>
-          <Grid item xs={12}>
-            <Link className={classes.a} underline={"none"} component="button">
-              <div className={classes.group}>
-                <AccountBalanceIcon className={classes.icon} />
-                <p>Desembolsados</p>
-              </div>
-              <span className={classes.span}>10</span>
-            </Link>
-          </Grid>
-        </div>
         <Divider />
 
         <div className={classes.row}>
           <Grid item xs={6}>
             <div className={classes.contenido}>
-              <Link
-                className={classes.a}
-                underline={"none"}
-                component="button"
-                component={Lino}
-                to="/gestor-nuevo-credito"
-              >
-                <div className={classes.group}>
-                  <DoneAllIcon className={classes.icon} />
-                  <p>Cancelados</p>
-                </div>
-                <span className={classes.span}>{numero.size}</span>
-              </Link>
+              <RenovacionContador />
             </div>
           </Grid>
-          
         </div>
       </Grid>
     </Container>

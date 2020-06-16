@@ -15,18 +15,18 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
-import clienteAxios from "../../config/axios";
-import Title from "../Title";
+
+import Title from "../../Title";
 import { withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
-import Modal from "../Modal";
+
 import { useDispatch, useSelector } from "react-redux";
-import { formateador } from "../../Helper";
+import { formateador } from "../../../Helper";
 import {
   solicitudNuevos,
   editarCreditoAction,
-} from "../../actions/solicitudCreditoNuevoAction";
-import { contadorCreditos } from "../../actions/contadorCreditosActions";
+} from "../../../actions/solicitudCreditoNuevoAction";
+import { contadorCreditos } from "../../../actions/contadorCreditosActions";
 import { format } from "date-fns";
 import { green } from "@material-ui/core/colors";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -95,7 +95,7 @@ const EditaCredito = (props) => {
   const solicitudEditable = useSelector(
     (state) => state.solicitudCreditosNuevos.creditoeditar.solicitud
   );
-//ACA ESTUVE
+
   const history = useHistory();
   const dispatch = useDispatch();
   
@@ -166,6 +166,7 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: fecha,
+            antiguo:true,
             [e.target.name]: e.target.checked,
           });
           break;
@@ -206,6 +207,7 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: null,
+            antiguo:false,
             [e.target.name]: null,
           });
           break;

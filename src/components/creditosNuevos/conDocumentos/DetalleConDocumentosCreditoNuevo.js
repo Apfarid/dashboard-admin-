@@ -15,18 +15,18 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
-import clienteAxios from "../../config/axios";
-import Title from "../Title";
+
+import Title from "../../Title";
 import { withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
-import Modal from "../Modal";
+
 import { useDispatch, useSelector } from "react-redux";
-import { formateador } from "../../Helper";
+import { formateador } from "../../../Helper";
 import {
   solicitudNuevos,
   editarCreditoAction,
-} from "../../actions/solicitudCreditoNuevoAction";
-import { contadorCreditos } from "../../actions/contadorCreditosActions";
+} from "../../../actions/solicitudCreditoNuevoAction";
+import { contadorCreditos } from "../../../actions/contadorCreditosActions";
 import { format } from "date-fns";
 import { green } from "@material-ui/core/colors";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -93,17 +93,15 @@ const EditaCredito = (props) => {
   const [credito, setCredito] = useState({});
 
   const solicitudEditable = useSelector(
-    (state) => state.solicitudCreditosNuevos.creditoeditar.solicitud
+    (state) => state.solicitudCreditosNuevos.creditoeditar
   );
-//ACA ESTUVE
+
   const history = useHistory();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     setCredito(solicitudEditable);
   }, [solicitudEditable]);
-
-  console.log(solicitudEditable);
 
   const Actualizar = (e) => {
     e.preventDefault();
@@ -166,6 +164,7 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: fecha,
+            antiguo: true,
             [e.target.name]: e.target.checked,
           });
           break;
@@ -206,6 +205,7 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: null,
+            antiguo: false,
             [e.target.name]: null,
           });
           break;
@@ -220,12 +220,20 @@ const EditaCredito = (props) => {
     });
   };
 
+  const cedula = credito?.cliente?.cedula
+  const nombre = credito?.cliente?.nombres || ""
+  const apellido = credito?.cliente?.apellidos || ""
+  const valosSolicitado = credito?.valorSolicitado || ""
+  const banco = credito?.cliente?.banco
+  const cuenta = credito?.cliente?.numeroCuenta
+
+
   return (
     <Fragment>
       <form className={classes.root} autoComplete="off" onSubmit={Actualizar}>
         <Title>
           Información crédito cédula:{" "}
-          {formateador(solicitudEditable.cliente.cedula || "")}
+          {cedula}
         </Title>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={6} className={classes.form}>
@@ -233,9 +241,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-input"
                 label="Nombre Completo"
-                value={`${solicitudEditable.cliente.nombres || ""} ${
-                  solicitudEditable.cliente.apellidos || ""
-                }`}
+                value={`${nombre} ${apellido}`}
                 InputProps={{
                   disabled: true,
                 }}
@@ -263,7 +269,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Cedula"
-                value={formateador(solicitudEditable.cliente.cedula) || ""}
+                value={cedula}
                 InputProps={{
                   disabled: true,
                 }}
@@ -323,7 +329,7 @@ const EditaCredito = (props) => {
                 id="filled-read-only-inputq"
                 label="Monto Solicitado"
                 value={`$ ${
-                  formateador(solicitudEditable.valorSolicitado) || ""
+                  valosSolicitado
                 }`}
                 InputProps={{
                   disabled: true,
@@ -398,7 +404,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Banco"
-                value={`${solicitudEditable.cliente.banco || ""}`}
+                value={`${banco}`}
                 InputProps={{
                   disabled: true,
                 }}
@@ -426,7 +432,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Numero de Cuenta"
-                value={`${solicitudEditable.cliente.numeroCuenta}`}
+                value={`${cuenta}`}
                 InputProps={{
                   disabled: true,
                 }}
