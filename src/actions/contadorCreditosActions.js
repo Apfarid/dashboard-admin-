@@ -28,7 +28,7 @@ const cargaCreditos = () => ({
 });
 
 const cargaExitoContador = (respuestaContador) => ({
-  type: VER_FIRMA,
+  type: VER_CONTADOR_EXITO,
   payload: respuestaContador,
 });
 

@@ -93,8 +93,11 @@ const EditaCredito = (props) => {
   const [credito, setCredito] = useState({});
 
   const solicitudEditable = useSelector(
-    (state) => state.solicitudCreditosNuevos.creditoeditar
+    (state) => state.solicitudCreditosNuevos.creditoeditar[0]
   );
+
+  
+
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -220,7 +223,7 @@ const EditaCredito = (props) => {
     });
   };
 
-  const cedula = credito?.cliente?.cedula
+  const cedula = credito?.cliente?.cedula || 0
   const nombre = credito?.cliente?.nombres || ""
   const apellido = credito?.cliente?.apellidos || ""
   const valosSolicitado = credito?.valorSolicitado || ""
@@ -233,7 +236,7 @@ const EditaCredito = (props) => {
       <form className={classes.root} autoComplete="off" onSubmit={Actualizar}>
         <Title>
           Información crédito cédula:{" "}
-          {cedula}
+          {formateador(cedula)}
         </Title>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={6} className={classes.form}>
@@ -269,7 +272,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Cedula"
-                value={cedula}
+                value={formateador(cedula)}
                 InputProps={{
                   disabled: true,
                 }}
@@ -329,7 +332,7 @@ const EditaCredito = (props) => {
                 id="filled-read-only-inputq"
                 label="Monto Solicitado"
                 value={`$ ${
-                  valosSolicitado
+                  formateador(valosSolicitado)
                 }`}
                 InputProps={{
                   disabled: true,

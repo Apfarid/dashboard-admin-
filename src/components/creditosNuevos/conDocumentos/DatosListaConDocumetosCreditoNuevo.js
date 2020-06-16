@@ -12,7 +12,9 @@ export default function (solicitud) {
 
   const redireccionarEdicion = solicitud => {
     dispatch( obtenerCreditoEditar(solicitud) );
-    history.push(`/gestor-nuevo-credito/preaprobado-con-documentos/${solicitud.solicitud.clienteId}`)
+    console.log(solicitud);
+    
+    history.push(`/gestor-creditos/${solicitud.solicitud.clienteId}`)
     
 }
 

@@ -24,7 +24,7 @@ export const mainListItems = (
       <ListItemText primary="Inicio" />
     </ListItem>
 
-    <ListItem button component={Link} to="/gestor-creditos">
+    <ListItem button component={Link} to="/gestor-creditos-general">
       <ListItemIcon>
         <AttachMoneyIcon />
       </ListItemIcon>

@@ -18,14 +18,17 @@ const GestorDatosPersonales = () => {
 
   const firmas = useSelector((state) => state.numeroCreditos.contador);
 
+  console.log(firmas);
+  
+
   let data = firmas.map((dato) => {
     return {
-      Cedula: dato.cliente.cedula,
+      Cedula: dato?.cliente?.cedula,
       consecutivo: dato.id,
-      nombre: dato.cliente.nombres + " " + dato.cliente.apellidos,
-      claveCorta: dato.firmaCorta,
-      claveLarga: dato.firmaLarga,
-      fechaCreacion: dato.fechaFirma,
+      nombre: dato?.cliente?.nombres + " " + dato?.cliente?.apellidos,
+      claveCorta: dato?.firmaCorta,
+      claveLarga: dato?.firmaLarga,
+      fechaCreacion: dato?.fechaFirma,
     };
   });
 

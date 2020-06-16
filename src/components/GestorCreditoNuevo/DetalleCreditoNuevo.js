@@ -93,9 +93,11 @@ const EditaCredito = (props) => {
   const [credito, setCredito] = useState({});
 
   const solicitudEditable = useSelector(
-    (state) => state.solicitudCreditosNuevos.creditoeditar.solicitud
+    (state) => state.solicitudCreditosNuevos.creditoeditar[0]
   );
-//ACA ESTUVE
+
+  console.log(solicitudEditable);
+  
   const history = useHistory();
   const dispatch = useDispatch();
   

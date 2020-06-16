@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
-import Lista from "../../components/gestorDatos/GestorDatosPersonales";
+import ListaGeneral from "../../../components/gestorGeneralCreditos/ListaGeneralCreditos";
 
 const drawerWidth = 240;
 
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GestorCreditos() {
+export default function GestorCreditosSinDocumentos() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fixedHeightPaperDos = clsx(classes.paper, classes.fixedHeightDos);
@@ -39,7 +39,7 @@ export default function GestorCreditos() {
       <Grid container spacing={3}>
         {/* Creditos Nuevos */}
         <Grid item xs={12} md={12} lg={12}>
-          <Lista/>
+          <ListaGeneral />
         </Grid>
       </Grid>
     </Container>

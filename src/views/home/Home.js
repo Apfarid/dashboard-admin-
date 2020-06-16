@@ -29,6 +29,7 @@ import DisplayViejos from "../../components/displayViejos/DisplayViejos";
 
 import { solicitudNuevos } from "../../actions/solicitudCreditoNuevoAction";
 import { cargaFirma } from "../../actions/contadorCreditosActions";
+import { cargaCliente } from "../../actions/cliente";
 import { useDispatch, useSelector } from "react-redux";
 
 const drawerWidth = 240;
@@ -61,13 +62,17 @@ export default function Dashboard() {
 
   const numeroCreditosDispatch = useDispatch();
   const solicitudesDispatch = useDispatch();
-  const cantidadCreditos = useSelector((state) => state.numeroCreditos);
+  const clientesDispatch = useDispatch()
 
   useEffect(() => {
     const contarCreditos = () => numeroCreditosDispatch(cargaFirma());
     contarCreditos();
+   
     const solicitudesNuevas = () => solicitudesDispatch(solicitudNuevos());
     solicitudesNuevas();
+   
+    const clientes = () => clientesDispatch(cargaCliente());
+    clientes();
   }, []);
 
   return (

@@ -36,7 +36,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import shortid from "shortid";
 
@@ -93,12 +93,11 @@ const EditaCredito = (props) => {
   const [credito, setCredito] = useState({});
 
   const solicitudEditable = useSelector(
-    (state) => state.solicitudCreditosNuevos.creditoeditar.solicitud
-  );
+    (state) => state.solicitudCreditosNuevos.creditoeditar[0])
 
   const history = useHistory();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     setCredito(solicitudEditable);
   }, [solicitudEditable]);
@@ -107,8 +106,10 @@ const EditaCredito = (props) => {
 
   const Actualizar = (e) => {
     e.preventDefault();
+    const fechaDesembolsado = new Date()
 
     if (credito.valorAprobado === "" || credito.valorAprobado <= 1) {
+
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -117,9 +118,27 @@ const EditaCredito = (props) => {
       return;
     }
 
-    dispatch(editarCreditoAction(credito));
+    Swal.fire({
+      title: "¿Estas seguro que deseas Renobar este credito",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, Renovar!",
+      cancelButtonText: "No, cancelar",
+    }).then((result) => {
+      if (result.value) {
 
-    history.push("/");
+        dispatch(editarCreditoAction({fechaDesembolsado}));
+        Swal.fire("Renobado!", "Podrás hacer seguimiento a este credito en los informes de Gestión", "success");
+        history.push("/");
+ 
+      }
+    });
+
+
+    
+
   };
 
   const handleChangeRadio = (e) => {
@@ -166,7 +185,7 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: fecha,
-            antiguo:true,
+            antiguo: true,
             [e.target.name]: e.target.checked,
           });
           break;
@@ -207,7 +226,7 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: null,
-            antiguo:false,
+            antiguo: false,
             [e.target.name]: null,
           });
           break;
@@ -474,6 +493,9 @@ const EditaCredito = (props) => {
                 onChange={handleChangeMonto}
                 name="medioPago"
                 id="formatted-numberformat-input"
+                InputProps={{
+                  disabled: true,
+                }}
               />
             </FormControl>
           </Grid>
@@ -496,7 +518,7 @@ const EditaCredito = (props) => {
                 control={
                   <Checkbox
                     checked={Boolean(credito.rechazado)}
-                    disabled={Boolean(solicitudEditable.rechazado)}
+                    disabled={true}
                     onChange={handleChange}
                     name="rechazado"
                     color="primary"
@@ -544,7 +566,7 @@ const EditaCredito = (props) => {
                 control={
                   <Checkbox
                     checked={Boolean(credito.cancelado)}
-                    disabled={Boolean(solicitudEditable.cancelado)}
+                    disabled={true}
                     onChange={handleChange}
                     name="cancelado"
                     color="primary"
@@ -595,15 +617,6 @@ const EditaCredito = (props) => {
                   />
                 </div>
               </RadioGroup>
-
-              {/* MODAL
-
-                    checked={solicitudEditable.preAprobado !== null ? credito.solicitarDocumentos === false : "false"}
-
-
-                  <Modal />
-
-              */}
             </FormControl>
           </Grid>
 
@@ -614,20 +627,15 @@ const EditaCredito = (props) => {
               color="primary"
               className={classes.boton}
             >
-              Guardar
+              Renovar
             </Button>
+          
             <Button
               variant="contained"
               color="primary"
               className={classes.boton}
-            >
-              Imprimir
-            </Button>
-
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.boton}
+              component = {Link}
+              to="/gestor-nuevo-credito/renovacion"
             >
               Regresar
             </Button>

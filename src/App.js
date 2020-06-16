@@ -7,6 +7,7 @@ import DetalleCreditoNuevo from "./views/gestorCreditos/DetalleCredito";
 import GestorCreditoNuevo from "./views/gestorCreditos/GestorCreditos";
 import GestorCreditoConDocumento from "./views/gestorCreditos/GestorCreditosConDocumentos"
 import GestorCreditoAprobados from "./views/gestorCreditos/Aprobados"
+import GestorCreditosGeneral from "./views/gestorCreditos/gestorGeneral/GestorCreditosGeneral"
 import Sidebar from "./components/layout/Sideba";
 import GestorDatosPersonales from "./views/gestorDatos/GestorDatos";
 import InformacionPersonal from "./views/gestorDatos/InformacionPersonal";
@@ -23,6 +24,7 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import VistaConDocumentos from './views/gestorCreditos/VistaConDocumentos'
 import VistaSinDocumentos from './views/gestorCreditos/sinDocumentos/VistaSinDocumentos'
 import VistaRenovacion from './views/gestorCreditos/renovacion/VistaRenovacion'
+import VistaDatos from './views/gestorDatos/GestorDatos'
 
 
 import { Provider } from "react-redux";
@@ -64,9 +66,14 @@ const App = () => {
   
               <Route exact path="/gestor-nuevo-credito/renovacion"component={GestorCreditoRenovacion}/>
               <Route path="/gestor-nuevo-credito/renovacion/:id" component={VistaRenovacion}/>
+
+              <Route exact path="/gestor-creditos-general"component={GestorCreditosGeneral}/>
               
+              
+              <Route exact path="/informacion-personal/:id" component={InformacionPersonal}/>
+              <Route exact path="/informacion-personal" component={VistaDatos}/>
+
               <Route exact path="/detalle" component={DetalleCreditoNuevo} />
-              <Route exact path="/informacion-personal" component={InformacionPersonal}/>
               <Route exact path="/detalle-credito" component={DetalleAntiguo} />
               <Route exact path="/historico-cliente" component={Historico} />
               <Route exact path="/informes" component={Informes} />

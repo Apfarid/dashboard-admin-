@@ -1,35 +1,26 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { useHistory } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
-import CreateIcon from "@material-ui/icons/Create";
-import Link from "@material-ui/core/Link";
+import HistoryIcon from "@material-ui/icons/History";
+import Helper, { formateador } from "../../../Helper";
+import InfoIcon from "@material-ui/icons/Info";
 import { Link as Lino } from "react-router-dom";
-import clienteAxios from "../../../config/axios";
-
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import { solicitudNuevos } from "../../../actions/solicitudCreditoNuevoAction";
+import Link from "@material-ui/core/Link";
+import { obtenerCreditoEditar } from "../../../actions/solicitudCreditoNuevoAction";
 import { useDispatch, useSelector } from "react-redux";
-import DatosListaSolicitudCreditoNuevo from './DatosListaRenovacion'
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
+const ListaRenovacion = () => {
+  const history = useHistory(); // habilitar history para redirección
+  const [clientes, setClientes] = useState();
+  const dispatch = useDispatch();
 
-
-const ListaConDocumentosCreditoNuevo = () => {
-  const classes = useStyles();
+  useEffect(() => {
+    setClientes(data);
+  }, []);
 
   const creditosFiltrados = useSelector(
     (state) => state.solicitudCreditosNuevos.solicitudes
@@ -47,40 +38,111 @@ const ListaConDocumentosCreditoNuevo = () => {
     credito.desertado === null
   )
 
+  let data = creditosFiltrado.map((dato) => {
+    return {
+      clienteId: dato.clienteId,
+      id: dato.id,
+      cedula: dato.cliente.cedula,
+      nombre: dato.cliente.nombres + " " + dato.cliente.apellidos,
+      valorAprobado: `$ ${formateador(dato.valorAprobado)}`,
+      firmado: dato.firmaCorta ? "Sí" : "No",
+    };
+  });
 
-  const conDocumentosDispatch = useDispatch();
+  const redireccionarEdicion = (solicitud) => {
+    const credito = creditosFiltrado.filter(
+      (credito) => credito.clienteId === solicitud
+    );
+    dispatch(obtenerCreditoEditar(credito));
+    history.push(
+      `/gestor-nuevo-credito/renovacion/${solicitud}`
+    );
+  };
 
-  useEffect(() => {
-    const solicitudesNuevas = () => conDocumentosDispatch(solicitudNuevos());
-    solicitudesNuevas();
-  }, []);
+  const columns = [
+    {
+      label: "Codigo",
+      name: "clienteId",
+      show: "hiddem",
+      options: {
+        filter: false,
+        sort: false,
+      },
+    },
+    {
+      label: "Consecutivo",
+      name: "id",
+      options: {
+        filter: false,
+        sort: false,
+      },
+    },
+
+    {
+      label: "Cedula",
+      name: "cedula",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label: "Nombre",
+      name: "nombre",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label: "Monto Aprobado",
+      name: "valorAprobado",
+      options: {
+        filter: true,
+      },
+    },
+
+    {
+      name: "Información",
+      options: {
+        filter: false,
+        sort: false,
+        empty: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <IconButton
+              aria-label="Editar"
+              onClick={() => redireccionarEdicion(tableMeta.rowData[0])}
+            >
+              <EditIcon buttom aria-label="Editar" disabled color="primary" />
+            </IconButton>
+          );
+        },
+      },
+    },
+  ];
+
+  const options = {
+    filter: true,
+    download: false,
+    filterType: "dropdown",
+    responsive: "scroll",
+    print: false,
+    page: 2,
+    onColumnSortChange: (changedColumn, direction) =>
+      console.log("changedColumn: ", changedColumn, "direction: ", direction),
+    onChangeRowsPerPage: (numberOfRows) =>
+      console.log("numberOfRows: ", numberOfRows),
+    onChangePage: (currentPage) => console.log("currentPage: ", currentPage),
+  };
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">ID</TableCell>
-            <TableCell align="center">cedula</TableCell>
-            <TableCell align="center">Nombres</TableCell>
-            <TableCell align="center">Monto Solicitado</TableCell>
-            <TableCell align="center">botones</TableCell>
-          </TableRow>
-        </TableHead>
-        <tbody>
-          {creditosFiltrado.length === 0
-            ? "No hay Solicitudes"
-            : creditosFiltrado.map((solicitud) => (
-                <DatosListaSolicitudCreditoNuevo solicitud={solicitud} key={solicitud.id} />
-              ))}
-        </tbody>
-      </Table>
-    </TableContainer>
+    <MUIDataTable
+      title={"Renovación de Creditos"}
+      data={clientes}
+      columns={columns}
+      options={options}
+    />
   );
 };
 
-export default ListaConDocumentosCreditoNuevo;
+export default ListaRenovacion;
 
-/**
- *
- */

@@ -3,98 +3,103 @@ import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { useHistory } from "react-router-dom";
+
 import EditIcon from "@material-ui/icons/Edit";
 import HistoryIcon from "@material-ui/icons/History";
-import Title from "../Title";
+import Helper, { formateador } from "../../Helper";
 import InfoIcon from "@material-ui/icons/Info";
 import { Link as Lino } from "react-router-dom";
 import Link from "@material-ui/core/Link";
-import clienteAxios from "../../config/axios";
+import { obtenerCreditoEditar } from "../../actions/solicitudCreditoNuevoAction";
 import { useDispatch, useSelector } from "react-redux";
-import {obtenerInformacionEditar} from '../../actions/cliente'
-import { useHistory } from "react-router-dom";
 
 const GestorDatosPersonales = () => {
   const history = useHistory(); // habilitar history para redirección
   const dispatch = useDispatch();
-  const [informacionCliente, setInformacionCliente] = useState([]);
-
-  const clienteInfo = useSelector(
-    (state) => state.cliente.clientes
-  );
-
-  console.log(clienteInfo.usuario);
-  
-
-  let listaCliente = clienteInfo.map( cliente => {
- 
-    return{
-      id: cliente.id,
-      cedula: cliente.cedula,
-      nombres : cliente.nombres,
-      apellidos : cliente.apellidos,
-      correo: cliente.usuario.email
-    }
-  })
-
-  console.log(clienteInfo);
-  
-  const redireccionarEdicion = (id) => {
-    const cliente = clienteInfo.filter(
-      (cliente) => cliente.id === id
-    );
-    dispatch(obtenerInformacionEditar(cliente));
-    history.push(
-      `informacion-personal/${id}`
-    );
-  };
-
+  const [clientes, setClientes] = useState();
 
   useEffect(() => {
-    setInformacionCliente(listaCliente);
+    setClientes(data);
   }, []);
 
+  const creditosFiltrados = useSelector(
+    (state) => state.solicitudCreditosNuevos.solicitudes
+  );
+
+  let creditosFiltrado = creditosFiltrados.filter(
+    (credito) => credito.cancelado === null
+  );
+
+  let data = creditosFiltrado.map((dato) => {
+    return {
+      clienteId: dato.clienteId,
+      id: dato.id,
+      cedula: dato.cliente.cedula,
+      nombre: dato.cliente.nombres + " " + dato.cliente.apellidos,
+      valorAprobado: `$ ${formateador(dato.valorAprobado)}`,
+      firmado: dato.firmaCorta ? "Sí" : "No",
+    };
+  });
+
+  const redireccionarEdicion = (solicitud) => {
+    const credito = creditosFiltrado.filter(
+      (credito) => credito.clienteId === solicitud
+    );
+    dispatch(obtenerCreditoEditar(credito));
+    history.push(
+      `/gestor-nuevo-credito/preaprobado-con-documentos/${solicitud}`
+    );
+  };
 
   const columns = [
     {
       label: "Codigo",
+      name: "clienteId",
+      show: "hiddem",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      label: "Consecutivo",
       name: "id",
       options: {
         filter: true,
         sort: false,
       },
     },
+
     {
       label: "Cedula",
       name: "cedula",
       options: {
         filter: true,
-        sort: false,
       },
     },
-
     {
-      label: "Nombres",
-      name: "nombres",
+      label: "Nombre",
+      name: "nombre",
       options: {
         filter: true,
       },
     },
     {
-      label: "Apellidos",
-      name: "apellidos",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      label: "Correo",
-      name: "correo",
+      label: "Monto Solicitado",
+      name: "valorAprobado",
       options: {
         filter: true,
       },
     },
 
+    {
+      label: "Contrato Firmado",
+      name: "firmado",
+      options: {
+        filter: true,
+      },
+    },
 
     {
       name: "Gestionar",
@@ -118,6 +123,7 @@ const GestorDatosPersonales = () => {
 
   const options = {
     filter: true,
+    download: false,
     filterType: "dropdown",
     responsive: "scroll",
     print: false,
@@ -131,15 +137,10 @@ const GestorDatosPersonales = () => {
 
   return (
     <MUIDataTable
-      title={"Gestor de Datos Personales"}
-      data={informacionCliente.map((cliente) => [
-        cliente.id,
-        cliente.cedula,
-        cliente.nombres,
-        cliente.apellidos,
-        cliente.correo,
-      ])}
+      title={"Gestor de Creditos"}
+      data={clientes}
       columns={columns}
+      options={options}
     />
   );
 };

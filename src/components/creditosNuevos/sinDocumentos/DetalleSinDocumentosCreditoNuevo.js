@@ -102,8 +102,6 @@ const EditaCreditoS = (props) => {
     setCredito(solicitudEditable);
   }, [solicitudEditable]);
 
-  
-
   const Actualizar = (e) => {
     e.preventDefault();
 
