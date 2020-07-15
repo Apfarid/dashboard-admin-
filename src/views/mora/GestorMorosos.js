@@ -1,9 +1,10 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
+
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Aprobados from "../../components/GestorCreditoNuevo/conDocumentos/Aprobados";
+import GestorSinDocumentos from "../../components/moratorios/DetalleMorosos";
 
 const drawerWidth = 240;
 
@@ -28,15 +29,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GestorCreditos() {
+export default function VistaSinDocumentos() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fixedHeightPaperDos = clsx(classes.paper, classes.fixedHeightDos);
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>
+        {/* Creditos Nuevos */}
         <Grid item xs={12} md={12} lg={12}>
-          <Aprobados />
+          <GestorSinDocumentos />
         </Grid>
       </Grid>
     </Container>

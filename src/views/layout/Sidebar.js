@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { Hidden } from "@material-ui/core";
@@ -12,37 +11,12 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Logo from "../../img/logoBlanco.png";
-import Badge from "@material-ui/core/Badge";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-
-import { mainListItems, secondaryListItems } from "../listItems";
-import Chart from "../Chart";
-import Deposits from "../Deposits";
-import Orders from "../Orders";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { mainListItems, secondaryListItems } from "../../components/listItems";
 
 const drawerWidth = 240;
 
@@ -51,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
+    paddingRight: 24,
   },
   toolbarIcon: {
     display: "flex",
@@ -127,10 +101,10 @@ const useStyles = makeStyles((theme) => ({
   },
 
   buttonProfile: {
-    color : '#fff',
-    border: '2px solid #ffde2e',
-    margin:0,
-    padding:0
+    color: "#fff",
+    border: "2px solid #ffde2e",
+    margin: 0,
+    padding: 0,
   },
   items: {
     display: "flex",
@@ -156,7 +130,6 @@ export default function Dashboard({ children }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClose = () => {
@@ -193,7 +166,7 @@ export default function Dashboard({ children }) {
             noWrap
             className={classes.title}
           >
-             <img src={Logo} className={classes.logo} />
+            <img src={Logo} className={classes.logo} />
           </Typography>
 
           <div className={classes.items}>

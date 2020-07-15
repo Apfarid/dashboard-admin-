@@ -97,10 +97,10 @@ const EditaCredito = (props) => {
   );
 
   console.log(solicitudEditable);
-  
+
   const history = useHistory();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     setCredito(solicitudEditable);
   }, [solicitudEditable]);
@@ -595,15 +595,6 @@ const EditaCredito = (props) => {
                   />
                 </div>
               </RadioGroup>
-
-              {/* MODAL
-
-                    checked={solicitudEditable.preAprobado !== null ? credito.solicitarDocumentos === false : "false"}
-
-
-                  <Modal />
-
-              */}
             </FormControl>
           </Grid>
 

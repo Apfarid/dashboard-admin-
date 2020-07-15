@@ -1,32 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 import { Grid, Divider } from "@material-ui/core";
-import AssignmentTwoToneIcon from "@material-ui/icons/AssignmentTwoTone";
-import AssignmentLateTwoToneIcon from "@material-ui/icons/AssignmentLateTwoTone";
-import AssignmentTurnedInTwoToneIcon from "@material-ui/icons/AssignmentTurnedInTwoTone";
-import AssignmentReturnedTwoToneIcon from "@material-ui/icons/AssignmentReturnedTwoTone";
 import Container from "@material-ui/core/Container";
 import Title from "../Title";
-import { Link as Lino } from "react-router-dom";
-import clienteAxios from "../../config/axios";
-import MarkunreadMailboxIcon from "@material-ui/icons/MarkunreadMailbox";
-import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import HourglassFullIcon from "@material-ui/icons/HourglassFull";
-import DoneAllIcon from "@material-ui/icons/DoneAll";
 import { useSelector } from "react-redux";
-import ReplayIcon from "@material-ui/icons/Replay";
 import PreaprobadosconDocumentos from "./PreaprobadosconDocumentos";
 import PreaprobadosSinDocumentos from "./PreaprobadosSinDocumentos";
 import SolicitudesContador from "./SolicitudesContador";
 import AprobadoContador from "./AprobadoContador";
 import RenovacionContador from "./RenovacionContador";
+import ClienteAxios from '../../config/axios'
 
 const useStyles = makeStyles({
   root: {
@@ -47,7 +30,6 @@ const useStyles = makeStyles({
   linkContainer: {
     display: "flex",
     justifyContent: "space-between",
-    //width: 300,
     alignItems: "baseline",
   },
 
@@ -97,43 +79,22 @@ const useStyles = makeStyles({
     alignItems: "center",
   },
 });
-
-/**diasPrestamo(pin):20
-valorSolicitado(pin):540000
-fechaDesembolso(pin):null
-plataforma(pin):21000
-administracion(pin):34000
-interes(pin):7484.412000000001
-interesMoratorio(pin):null
-impuesto(pin):10450
-valorAprobado(pin):600000
-firmaCorta(pin):"3CGk01Aex"
-firmaLarga(pin):"0adea78c-70e5-47e3-82d1-1b41dba61d30"
-fechaFirma(pin):null
-creacionFirma(pin):null
-solicitudCredito(pin):true
-reFinanciado(pin):null
-rechazado(pin):null
-preAprobado(pin):true
-aprobado(pin):true
-desembolsado(pin):true
-cancelado(pin):null
-fechaRechazado(pin):null
-fechaPreaprobado(pin):"2020-05-31"
-fechaDesembolsado(pin):"2020-05-31"
-fechaSolicitado(pin):"2020-05-31"
-fechaAprobado(pin):"2020-05-31"
-fechaCancelado(pin):null
-solicitarDocumentos(pin):"si"
-clienteId(pin):2 */
-
 export default function DisplayCreditosHome({ titulo }) {
   const classes = useStyles();
+  const [creditos, setCreditos] = useState([]);
+  
+  const cargarCreditos = async () => {
+    const respuesta = await ClienteAxios.get("/credito/solicitudes/nuevos");    
+    setCreditos(respuesta.data.solicitudNuevos)
+  }
 
   const cantidadCreditos = useSelector(
     (state) => state.solicitudCreditosNuevos.solicitudes
   );
-  
+
+  useEffect (() => {
+    cargarCreditos()
+  },[]) 
 
   return (
     <Container>

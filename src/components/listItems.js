@@ -4,20 +4,35 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import LayersIcon from "@material-ui/icons/Layers";
-import AssignmentIcon from "@material-ui/icons/Assignment";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import { Link } from "react-router-dom";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import ExposureIcon from "@material-ui/icons/Exposure";
-import AssessmentIcon from '@material-ui/icons/Assessment';
+import AssessmentIcon from "@material-ui/icons/Assessment";
+
+import { makeStyles } from "@material-ui/core/styles";
+
+import TimerOffIcon from "@material-ui/icons/TimerOff";
+import FindReplaceIcon from "@material-ui/icons/FindReplace";
+
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
 export const mainListItems = (
   <div>
-    <ListItem button component={Link} to="/"> 
+    <ListItem button component={Link} to="/">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
@@ -44,13 +59,26 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Gestor de Claves" />
     </ListItem>
+
+    <ListItem button component={Link} to="/moratorios">
+      <ListItemIcon>
+        <TimerOffIcon />
+      </ListItemIcon>
+      <ListItemText primary="Para Acuerdos" />
+    </ListItem>
+
+    <ListItem button component={Link} to="/moratorios">
+      <ListItemIcon>
+        <FindReplaceIcon />
+      </ListItemIcon>
+      <ListItemText primary="Seguimiento Acuerdo" />
+    </ListItem>
   </div>
 );
 
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>INFORMES</ListSubheader>
-
     <ListItem button component={Link} to="/informes">
       <ListItemIcon>
         <AssessmentIcon />

@@ -203,6 +203,7 @@ const EditaCreditoS = (props) => {
         case "cancelado":
           setCredito({
             ...credito,
+            antiguo: null,
             fechaCancelado: null,
             antiguo: false,
             [e.target.name]: null,

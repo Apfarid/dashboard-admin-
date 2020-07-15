@@ -7,31 +7,25 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
+
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
+  boton: {
+    margin: 10
+  },
 });
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-export default function SimpleTable() {
+export default function FacturacionTabla({facturados}) {
   const classes = useStyles();
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
+      <Table className={classes.table} aria-label="simple table" id="tabla-facturacion">
         <TableHead>
           <TableRow>
           <TableCell align="right">Fecha de Pago</TableCell>
@@ -40,7 +34,6 @@ export default function SimpleTable() {
             <TableCell align="right">Consecutivo Credito</TableCell>
             <TableCell align="right">Nombre</TableCell>
             <TableCell align="right">Apellido</TableCell>
-            <TableCell align="right">Direccion</TableCell>
             <TableCell align="right">Monto Aprobado</TableCell>
             <TableCell align="right">Plataforma Web</TableCell>
             <TableCell align="right">Administracion</TableCell>
@@ -52,23 +45,29 @@ export default function SimpleTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
-        <TableCell align="right"></TableCell>
+        {facturados.length === 0
+            ? "No hay Información"
+            : facturados.map((item, index) => (
+                <TableRow key={item.id}>
+                  <TableCell align="center">{item.fechaDesembolsado}</TableCell>
+                  <TableCell align="center">{item.cliente.cedula}</TableCell>
+                  <TableCell align="center">{item.cliente.genero}</TableCell>
+                  <TableCell align="center">{item.id}</TableCell>
+                  <TableCell align="center">{item.valorAprobado}</TableCell>
+                  <TableCell align="center">{item.diasPrestamo}</TableCell>
+                  <TableCell align="center">{item.cliente.banco}</TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
+      <ReactHTMLTableToExcel
+          className={classes.boton}
+          id="test-table-xls-button"
+          table="tabla-facturacion"
+          filename="facturacion"
+          sheet="FACTURACION"
+          buttonText="Exportar a Excel"
+        />
     </TableContainer>
   );
 }

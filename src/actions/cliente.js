@@ -18,7 +18,7 @@ export function cargaCliente() {
     try {
       const respuesta = await ClienteAxios.get("/clientes-admin");
       dispatch(cargarInformacionCliente(respuesta.data));
-      console.log(respuesta);
+
       
     } catch (error) {
       console.log(error);

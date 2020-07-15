@@ -32,12 +32,13 @@ const GestorDatosPersonales = () => {
   );
 
   let data = creditosFiltrado.map((dato) => {
+    let valor = dato?.valorAprobado || 0
     return {
       clienteId: dato.clienteId,
       id: dato.id,
       cedula: dato.cliente.cedula,
       nombre: dato.cliente.nombres + " " + dato.cliente.apellidos,
-      valorAprobado: `$ ${formateador(dato.valorAprobado)}`,
+      valorAprobado: `$ ${formateador(valor)}`,
       firmado: dato.firmaCorta ? "Sí" : "No",
     };
   });

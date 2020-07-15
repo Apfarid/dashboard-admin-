@@ -144,8 +144,7 @@ const GestorDatosPersonales = () => {
 
   return (
     <MUIDataTable
-      title={"Consulta Claves"}
-      //data={informacionCliente.map( cliente => [cliente.cedula, cliente.nombres, cliente.apellidos])}
+      title={"Solicitud de Creditos sin Documentación"}
       data={clientes}
       columns={columns}
       options={options}

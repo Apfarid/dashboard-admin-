@@ -21,7 +21,7 @@ import { withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 
 import { useDispatch, useSelector } from "react-redux";
-import { formateador } from "../../../Helper";
+import { formateador, cobroPlataforma, cobroAdministracion, intereses } from "../../../Helper";
 import {
   solicitudNuevos,
   editarCreditoAction,
@@ -30,12 +30,8 @@ import { contadorCreditos } from "../../../actions/contadorCreditosActions";
 import { format } from "date-fns";
 import { green } from "@material-ui/core/colors";
 import FormGroup from "@material-ui/core/FormGroup";
-
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
 import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import Favorite from "@material-ui/icons/Favorite";
-import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import shortid from "shortid";
@@ -164,9 +160,13 @@ const EditaCredito = (props) => {
           });
           break;
         case "cancelado":
+          let dias = differenceInCalendarDays(new Date(), new Date(credito.fechaDesembolsado))
           setCredito({
             ...credito,
             fechaCancelado: fecha,
+            administracion: cobroAdministracion(credito.valorAprobado),
+            plataforma: cobroPlataforma(credito.diasPrestamo),
+            intereses: intereses(dias, credito.valorAprobado ),
             antiguo: true,
             [e.target.name]: e.target.checked,
           });
@@ -208,7 +208,10 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: null,
-            antiguo: false,
+            plataforma:null,
+            intereses:null,
+            administracion:null,
+            antiguo: null,
             [e.target.name]: null,
           });
           break;
@@ -603,14 +606,6 @@ const EditaCredito = (props) => {
                 </div>
               </RadioGroup>
 
-              {/* MODAL
-
-                    checked={solicitudEditable.preAprobado !== null ? credito.solicitarDocumentos === false : "false"}
-
-
-                  <Modal />
-
-              */}
             </FormControl>
           </Grid>
 

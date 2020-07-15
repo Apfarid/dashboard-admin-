@@ -1,46 +1,72 @@
 import React, { useState, Fragment, useEffect } from "react";
+import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { useHistory } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
-import  { formateador } from "../../../Helper";
+import HistoryIcon from "@material-ui/icons/History";
+import Helper, { formateador } from "../../Helper";
+import InfoIcon from "@material-ui/icons/Info";
+import { Link as Lino } from "react-router-dom";
+import Link from "@material-ui/core/Link";
+import { obtenerCreditoEditar } from "../../actions/solicitudCreditoNuevoAction";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerCreditoEditar } from "../../../actions/solicitudCreditoNuevoAction";
+import { format, differenceInCalendarDays, addDays, subDays } from "date-fns";
+import { solicitudNuevos } from "../../actions/solicitudCreditoNuevoAction";
 
-const SolicitudesV = () => {
-  const history = useHistory();
+
+const hoy = format(new Date(), "yyyy-MM-dd");
+
+const ListaRenovacion = () => {
+  const history = useHistory(); // habilitar history para redirección
   const [clientes, setClientes] = useState();
   const dispatch = useDispatch();
+  const solicitudesDispatch = useDispatch();
 
   useEffect(() => {
     setClientes(data);
+    const solicitudesNuevas = () => solicitudesDispatch(solicitudNuevos());
+    solicitudesNuevas();
+
   }, []);
+
+
 
   const creditosFiltrados = useSelector(
     (state) => state.solicitudCreditosNuevos.solicitudes
   );
 
-  console.log(creditosFiltrados);
-  
-
-  let creditosFiltrado = creditosFiltrados.filter(credito => credito.solicitudCredito === true && credito.solicitarDocumentos === null)
+  let creditosFiltrado = creditosFiltrados.filter(credito => {
+    let diaLimite = addDays(new Date(credito.fechaDesembolsado), credito.diasPrestamo)
+    let diasAtrasados = differenceInCalendarDays(new Date(diaLimite), new Date(hoy))
+    return diasAtrasados < 0 
+   }
+  )
 
   let data = creditosFiltrado.map((dato) => {
+    let diaLimite = addDays(new Date(dato.fechaDesembolsado), dato.diasPrestamo)
+    let diasAtrasados = differenceInCalendarDays(new Date(hoy), new Date(diaLimite))
+    let valor = dato?.valorAprobado || 0
+    console.log(diasAtrasados)
     return {
-      id: dato.id,
       clienteId: dato.clienteId,
+      id: dato.id,
       cedula: dato.cliente.cedula,
       nombre: dato.cliente.nombres + " " + dato.cliente.apellidos,
-      valorSolicitado: `$ ${formateador(dato.valorSolicitado)}`,
+      valorAprobado: `$ ${formateador(valor)}`,
+      mora: `${diasAtrasados} ${diasAtrasados > 1 ? "dias" : "día"}`
     };
   });
 
   const redireccionarEdicion = (solicitud) => {
-    const credito = creditosFiltrados.filter(
-      (item) => item.clienteId === solicitud
+    const credito = creditosFiltrado.filter(
+      (credito) => credito.clienteId === solicitud
     );
     dispatch(obtenerCreditoEditar(credito));
-    history.push(`/gestor-creditos/${solicitud}`);
+    history.push(
+      `/moratorios/${solicitud}`
+    );
   };
 
   const columns = [
@@ -49,7 +75,7 @@ const SolicitudesV = () => {
       name: "clienteId",
       show: "hiddem",
       options: {
-        filter: true,
+        filter: false,
         sort: false,
       },
     },
@@ -58,7 +84,6 @@ const SolicitudesV = () => {
       name: "id",
       options: {
         filter: true,
-        sort: false,
       },
     },
 
@@ -77,13 +102,20 @@ const SolicitudesV = () => {
       },
     },
     {
-      label: "Monto Solicitado",
-      name: "valorSolicitado",
+      label: "Monto Aprobado",
+      name: "valorAprobado",
       options: {
-        filter: true,
+        filter: false,
       },
     },
-
+   
+    {
+      label: "Días de Mora",
+      name: "mora",
+      options: {
+        filter: false,
+      },
+    },
     {
       name: "Gestionar",
       options: {
@@ -102,6 +134,8 @@ const SolicitudesV = () => {
         },
       },
     },
+
+   
   ];
 
   const options = {
@@ -120,7 +154,7 @@ const SolicitudesV = () => {
 
   return (
     <MUIDataTable
-      title={"Solicitudes"}
+      title={"Gestor creditos atrasados"}
       data={clientes}
       columns={columns}
       options={options}
@@ -128,4 +162,5 @@ const SolicitudesV = () => {
   );
 };
 
-export default SolicitudesV;
+export default ListaRenovacion;
+

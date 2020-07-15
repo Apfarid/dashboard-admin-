@@ -1,117 +1,140 @@
-import React, { Fragment, useState, useEffect } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, Fragment, useEffect } from "react";
 import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import CreateIcon from "@material-ui/icons/Create";
-import Link from "@material-ui/core/Link";
-import { Link as Lino } from "react-router-dom";
-import clienteAxios from "../../../config/axios";
-
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import { solicitudNuevos } from "../../../actions/solicitudCreditoNuevoAction";
-import { useDispatch, useSelector } from "react-redux";
-import { formateador } from "../../../Helper";
 import { useHistory } from "react-router-dom";
+import EditIcon from "@material-ui/icons/Edit";
+import  { formateador } from "../../../Helper";
+import { useDispatch, useSelector } from "react-redux";
 import { obtenerCreditoEditar } from "../../../actions/solicitudCreditoNuevoAction";
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
-
-
 const SolicitudesV = () => {
-  const classes = useStyles();
+  const history = useHistory();
+  const [clientes, setClientes] = useState();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setClientes(data);
+  }, []);
 
   const cantidadCreditos = useSelector(
     (state) => state.solicitudCreditosNuevos.solicitudes
   );
+
   console.log(cantidadCreditos);
   
 
+
   let creditosFiltrados = cantidadCreditos.filter(
-    (credito) =>
-    credito.solicitarDocumentos === true  
-    && credito.solicitudCredito === true 
+    (credito) =>  
+    credito.solicitudCredito === true 
     && credito.aprobado === true
     && credito.cancelado === null
   );
 
-  const solicitudesDispatch = useDispatch();
 
-  useEffect(() => {
-    const solicitudesNuevas = () => solicitudesDispatch(solicitudNuevos());
-    solicitudesNuevas();
-  }, []);
-
-  const dispatch = useDispatch();
-  const history = useHistory(); // habilitar history para redirección
+  let data = creditosFiltrados.map((dato) => {
+    return {
+      id: dato.id,
+      clienteId: dato.clienteId,
+      cedula: dato.cliente.cedula,
+      nombre: dato.cliente.nombres + " " + dato.cliente.apellidos,
+      valorSolicitado: `$ ${formateador(dato.valorSolicitado)}`,
+    };
+  });
 
   const redireccionarEdicion = (solicitud) => {
+    
+    const credito = creditosFiltrados.filter(
+      (item) => item.clienteId === solicitud
+    );
+    dispatch(obtenerCreditoEditar(credito));
+    history.push(`/gestor-creditos/${solicitud}`);
+  };
 
-    dispatch(obtenerCreditoEditar(solicitud));
+  const columns = [
+    {
+      label: "Codigo",
+      name: "clienteId",
+      show: "hiddem",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      label: "Consecutivo",
+      name: "id",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
 
-    history.push(`/gestor-creditos/${solicitud.clienteId}`);
+    {
+      label: "Cedula",
+      name: "cedula",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label: "Nombre",
+      name: "nombre",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label: "Monto Solicitado",
+      name: "valorSolicitado",
+      options: {
+        filter: true,
+      },
+    },
+
+    {
+      name: "Gestionar",
+      options: {
+        filter: false,
+        sort: false,
+        empty: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <IconButton
+              aria-label="Editar"
+              onClick={() => redireccionarEdicion(tableMeta.rowData[0])}
+            >
+              <EditIcon buttom aria-label="Editar" disabled color="primary" />
+            </IconButton>
+          );
+        },
+      },
+    },
+  ];
+
+  const options = {
+    filter: true,
+    download: false,
+    filterType: "dropdown",
+    responsive: "scroll",
+    print: false,
+    page: 2,
+    onColumnSortChange: (changedColumn, direction) =>
+      console.log("changedColumn: ", changedColumn, "direction: ", direction),
+    onChangeRowsPerPage: (numberOfRows) =>
+      console.log("numberOfRows: ", numberOfRows),
+    onChangePage: (currentPage) => console.log("currentPage: ", currentPage),
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">ID</TableCell>
-            <TableCell align="center">cedula</TableCell>
-            <TableCell align="center">Nombres</TableCell>
-            <TableCell align="center">Monto Pre Aprobado</TableCell>
-            <TableCell align="center">Plazo</TableCell>
-            <TableCell align="center">botones</TableCell>
-          </TableRow>
-        </TableHead>
-        <tbody>
-          {creditosFiltrados.length === 0
-            ? "No hay productos"
-            : creditosFiltrados.map((item, index) => (
-                <TableRow key={item.id}>
-                  <TableCell align="center">{index + 1}</TableCell>
-                  <TableCell align="center">{item.id}</TableCell>
-                  <TableCell align="center">
-                    {item.cliente.nombres} {item.cliente.apellidos}
-                  </TableCell>
-                  <TableCell align="center">{item.valorAprobado}</TableCell>
-                  <TableCell align="center">
-                    {item.diasPrestamo}{" "}
-                    {item.diasPrestamo <= 1 ? "días" : "día"}
-                  </TableCell>
-                  <TableCell align="center">
-                    <button
-                      type="button"
-                      onClick={() => redireccionarEdicion(item)}
-                      className="btn btn-primary mr-2"
-                    >
-                      Editar
-                    </button>
-                  </TableCell>
-                </TableRow>
-              ))}
-        </tbody>
-      </Table>
-    </TableContainer>
+    <MUIDataTable
+      title={"Aprobados"}
+      data={clientes}
+      columns={columns}
+      options={options}
+    />
   );
 };
 
-//["cedula", "consecutivo", "$monto", "dias", "estado"],
 export default SolicitudesV;
 
-/**
- *
- */

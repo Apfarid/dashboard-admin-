@@ -1,11 +1,9 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import MarkunreadMailboxIcon from "@material-ui/icons/MarkunreadMailbox";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as Lino } from "react-router-dom";
-import HourglassFullIcon from "@material-ui/icons/HourglassFull";
 import Link from "@material-ui/core/Link";
-import { useSelector } from "react-redux";
-
+import ClienteAxios from '../../config/axios'
 
 const item = makeStyles({
   root: {
@@ -78,12 +76,17 @@ const item = makeStyles({
 
 const SolicitudesContador = ({ numero }) => {
   const classes = item();
+  const [creditos, setCreditos] = useState([])
 
-  const cantidadCreditos = useSelector(
-    (state) => state.solicitudCreditosNuevos.solicitudes
-  );
+const cargarCreditos = async () => {
+  const respuesta = await ClienteAxios.get("/credito/solicitudes/nuevos");    
+  setCreditos(respuesta.data.solicitudNuevos)
+}
+useEffect (() => {
+  cargarCreditos()
+},[]) 
   
-  let solicitudes = cantidadCreditos.filter(solicitud => {
+  let solicitudes = creditos.filter(solicitud => {
     if (
       solicitud.solicitudCredito === true &&
       solicitud.rechazado === null &&

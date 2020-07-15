@@ -6,6 +6,9 @@ import {
   COMENZAR_EDICION_CREDITO,
   CREDITO_EDITADO_EXITO,
   CREDITO_EDITADO_ERROR,
+  VER_CREDITOS_GENERAL,
+  VER_CREDITOS_GENERAL_EXITO,
+  VER_CREDITOS_GENERAL_ERROR,
 } from "../types";
 import ClienteAxios from "../config/axios";
 
@@ -50,6 +53,7 @@ const obtenerCreditoAction = (credito) => ({
 
 // Edita un registro en la api y state
 export function editarCreditoAction(credito) {
+  console.log(credito);
   return async (dispatch) => {
     dispatch(editarCredito());
     try {

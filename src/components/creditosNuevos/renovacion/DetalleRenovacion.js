@@ -226,7 +226,7 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: null,
-            antiguo: false,
+            antiguo: null,
             [e.target.name]: null,
           });
           break;

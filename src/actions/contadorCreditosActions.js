@@ -13,9 +13,7 @@ export function cargaFirma() {
     dispatch(cargaCreditos());
     try {
       const respuestaContador = await ClienteAxios.get("/firmas");
-      dispatch(cargaExitoContador(respuestaContador.data.creditos));
-      console.log("entre");
-      
+      dispatch(cargaExitoContador(respuestaContador.data.creditos));      
     } catch (error) {
       console.log(error);
       dispatch(cargaError(true));

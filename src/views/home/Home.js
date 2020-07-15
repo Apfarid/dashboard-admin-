@@ -1,36 +1,16 @@
 import React, { useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import Filter from "../../components/Filter";
-
-import { mainListItems, secondaryListItems } from "../../components/listItems";
 import Chart from "../../components/Chart";
-import Deposits from "../../components/Deposits";
-import Orders from "../../components/Orders";
 import DisplayNuevos from "../../components/displaynuevos/DisplayCreditosHome";
-import DisplayViejos from "../../components/displayViejos/DisplayViejos";
-
 import { solicitudNuevos } from "../../actions/solicitudCreditoNuevoAction";
 import { cargaFirma } from "../../actions/contadorCreditosActions";
 import { cargaCliente } from "../../actions/cliente";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -55,22 +35,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard() {
+export default function Home() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fixedHeightPaperDos = clsx(classes.paper, classes.fixedHeightDos);
 
   const numeroCreditosDispatch = useDispatch();
   const solicitudesDispatch = useDispatch();
-  const clientesDispatch = useDispatch()
+  const clientesDispatch = useDispatch();
 
   useEffect(() => {
     const contarCreditos = () => numeroCreditosDispatch(cargaFirma());
     contarCreditos();
-   
+
     const solicitudesNuevas = () => solicitudesDispatch(solicitudNuevos());
     solicitudesNuevas();
-   
+
     const clientes = () => clientesDispatch(cargaCliente());
     clientes();
   }, []);
