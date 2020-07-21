@@ -25,7 +25,7 @@ import Chart from "../../components/Chart";
 import Deposits from "../../components/Deposits";
 import Orders from "../../components/Orders";
 import DisplayViejos from "../../components/displayViejos/DisplayViejos";
-import GestorConDocumentos from "../../components/creditosNuevos/conDocumentos/DetalleConDocumentosCreditoNuevo";
+import GestorConDocumentos from "../../components/creditosNuevos/conDocumentos/ListaConDocumentosCreditoNuevo";
 
 const drawerWidth = 240;
 

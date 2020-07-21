@@ -32,25 +32,23 @@ const GestorDatosPersonales = () => {
   );
 
   let data = creditosFiltrado.map((dato) => {
-    let valor = dato?.valorAprobado || 0
+    let valor = dato?.valorSolicitado || 0;
     return {
       clienteId: dato.clienteId,
       id: dato.id,
       cedula: dato.cliente.cedula,
       nombre: dato.cliente.nombres + " " + dato.cliente.apellidos,
-      valorAprobado: `$ ${formateador(valor)}`,
+      valorSolicitado: `$ ${formateador(valor)}`,
       firmado: dato.firmaCorta ? "Sí" : "No",
     };
   });
 
   const redireccionarEdicion = (solicitud) => {
-    const credito = creditosFiltrado.filter(
-      (credito) => credito.clienteId === solicitud
+    const credito = creditosFiltrados.filter(
+      (item) => item.clienteId === solicitud
     );
     dispatch(obtenerCreditoEditar(credito));
-    history.push(
-      `/gestor-nuevo-credito/preaprobado-con-documentos/${solicitud}`
-    );
+    history.push(`/gestion-credito`);
   };
 
   const columns = [
@@ -88,7 +86,7 @@ const GestorDatosPersonales = () => {
     },
     {
       label: "Monto Solicitado",
-      name: "valorAprobado",
+      name: "valorSolicitado",
       options: {
         filter: true,
       },

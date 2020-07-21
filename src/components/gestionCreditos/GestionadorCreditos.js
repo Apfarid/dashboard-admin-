@@ -1,14 +1,8 @@
 import React, { Fragment, useState, useEffect } from "react";
-
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import { uuid } from "uuidv4";
-import FilledInput from "@material-ui/core/FilledInput";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import NumberFormat from "react-number-format";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
@@ -16,21 +10,23 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 
-import Title from "../../Title";
+import Title from "../Title";
 import { withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 
 import { useDispatch, useSelector } from "react-redux";
-import { formateador, cobroPlataforma, cobroAdministracion, intereses } from "../../../Helper";
+import {
+  formateador,
+  cobroPlataforma,
+  cobroAdministracion,
+  intereses,
+} from "../../Helper";
 import {
   solicitudNuevos,
   editarCreditoAction,
-} from "../../../actions/solicitudCreditoNuevoAction";
-import { contadorCreditos } from "../../../actions/contadorCreditosActions";
-import { format } from "date-fns";
-import { green } from "@material-ui/core/colors";
+} from "../../actions/solicitudCreditoNuevoAction";
 import FormGroup from "@material-ui/core/FormGroup";
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
+import differenceInCalendarDays from "date-fns/differenceInCalendarDays";
 import Checkbox from "@material-ui/core/Checkbox";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -81,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fecha = format(new Date(), "MM/dd/yyyy");
+const fecha = new Date();
 
 const EditaCredito = (props) => {
   const classes = useStyles();
@@ -92,8 +88,7 @@ const EditaCredito = (props) => {
     (state) => state.solicitudCreditosNuevos.creditoeditar[0]
   );
 
-  
-
+  console.log(solicitudEditable);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -105,7 +100,7 @@ const EditaCredito = (props) => {
   const Actualizar = (e) => {
     e.preventDefault();
 
-    if (credito.valorAprobado === "" || credito.valorAprobado <= 1) {
+    if (credito?.valorAprobado === "" || credito?.valorAprobado <= 1) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -160,13 +155,16 @@ const EditaCredito = (props) => {
           });
           break;
         case "cancelado":
-          let dias = differenceInCalendarDays(new Date(), new Date(credito.fechaDesembolsado))
+          let dias = differenceInCalendarDays(
+            new Date(),
+            new Date(credito?.fechaDesembolsado)
+          );
           setCredito({
             ...credito,
             fechaCancelado: fecha,
-            administracion: cobroAdministracion(credito.valorAprobado),
-            plataforma: cobroPlataforma(credito.diasPrestamo),
-            intereses: intereses(dias, credito.valorAprobado ),
+            administracion: cobroAdministracion(credito?.valorAprobado),
+            plataforma: cobroPlataforma(credito?.diasPrestamo),
+            intereses: intereses(dias, credito?.valorAprobado),
             antiguo: true,
             [e.target.name]: e.target.checked,
           });
@@ -208,9 +206,9 @@ const EditaCredito = (props) => {
           setCredito({
             ...credito,
             fechaCancelado: null,
-            plataforma:null,
-            intereses:null,
-            administracion:null,
+            plataforma: null,
+            intereses: null,
+            administracion: null,
             antiguo: null,
             [e.target.name]: null,
           });
@@ -226,21 +224,17 @@ const EditaCredito = (props) => {
     });
   };
 
-  const cedula = credito?.cliente?.cedula || 0
-  const nombre = credito?.cliente?.nombres || ""
-  const apellido = credito?.cliente?.apellidos || ""
-  const valosSolicitado = credito?.valorSolicitado || ""
-  const banco = credito?.cliente?.banco
-  const cuenta = credito?.cliente?.numeroCuenta
-
+  const cedula = credito?.cliente?.cedula || 0;
+  const nombre = credito?.cliente?.nombres || "";
+  const apellido = credito?.cliente?.apellidos || "";
+  const valosSolicitado = credito?.valorSolicitado || "";
+  const banco = credito?.cliente?.banco;
+  const cuenta = credito?.cliente?.numeroCuenta;
 
   return (
     <Fragment>
       <form className={classes.root} autoComplete="off" onSubmit={Actualizar}>
-        <Title>
-          Información crédito cédula:{" "}
-          {formateador(cedula)}
-        </Title>
+        <Title>Información crédito cédula: {formateador(cedula)}</Title>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={6} className={classes.form}>
             <FormControl fullWidth className={classes.margin} variant="filled">
@@ -261,7 +255,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-input"
                 label="Fecha solicitud del Credito"
-                value={solicitudEditable.fechaSolicitado || ""}
+                value={solicitudEditable?.fechaSolicitado || ""}
                 InputProps={{
                   //readOnly: true,
                   disabled: true,
@@ -289,7 +283,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-input"
                 label="Fecha Pre-aprobado"
-                value={credito.fechaPreaprobado || ""}
+                value={credito?.fechaPreaprobado || ""}
                 InputProps={{
                   //readOnly: true,
                   disabled: true,
@@ -304,7 +298,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-input"
                 label="Consecutivo"
-                value={solicitudEditable.id || ""}
+                value={solicitudEditable?.id || ""}
                 InputProps={{
                   //readOnly: true,
                   disabled: true,
@@ -319,7 +313,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-input"
                 label="Fecha Aprobado"
-                value={credito.fechaAprobado || ""}
+                value={credito?.fechaAprobado || ""}
                 InputProps={{
                   //readOnly: true,
                   disabled: true,
@@ -334,9 +328,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Monto Solicitado"
-                value={`$ ${
-                  formateador(valosSolicitado)
-                }`}
+                value={`$ ${formateador(valosSolicitado)}`}
                 InputProps={{
                   disabled: true,
                 }}
@@ -350,14 +342,14 @@ const EditaCredito = (props) => {
               <TextField
                 variant="outlined"
                 label="Monto Aprobado"
-                value={credito.valorAprobado}
+                value={credito?.valorAprobado}
                 onChange={handleChangeMonto}
                 name="valorAprobado"
                 id="formatted-numberformat-input"
                 InputProps={{
                   inputComponent: NumberFormatCustom,
                   disabled:
-                    solicitudEditable.valorAprobado !== null ? true : false,
+                    solicitudEditable?.valorAprobado !== null ? true : false,
                 }}
               />
             </FormControl>
@@ -368,7 +360,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Fecha de Cancelación"
-                value={credito.fechaCancelado || ""}
+                value={credito?.fechaCancelado || ""}
                 InputProps={{
                   disabled: true,
                 }}
@@ -382,7 +374,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Plazo Solicitado"
-                value={`${solicitudEditable.diasPrestamo} días`}
+                value={`${solicitudEditable?.diasPrestamo} días`}
                 InputProps={{
                   disabled: true,
                 }}
@@ -396,7 +388,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Fecha de Desembolso"
-                value={credito.fechaDesembolsado || ""}
+                value={credito?.fechaDesembolsado || ""}
                 InputProps={{
                   disabled: true,
                 }}
@@ -424,7 +416,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Fecha limite de pago"
-                value={`${solicitudEditable.vencimiento || ""}`}
+                value={`${solicitudEditable?.vencimiento || ""}`}
                 InputProps={{
                   disabled: true,
                 }}
@@ -452,7 +444,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="¿Firmó contrato?"
-                value={`${solicitudEditable.fechaFirma ? "Sí" : "No" || ""}`}
+                value={`${solicitudEditable?.fechaFirma ? "Sí" : "No" || ""}`}
                 InputProps={{
                   disabled: true,
                 }}
@@ -466,7 +458,7 @@ const EditaCredito = (props) => {
               <TextField
                 id="filled-read-only-inputq"
                 label="Fecha Contrato"
-                value={`${solicitudEditable.fechaFirma || ""}`}
+                value={`${solicitudEditable?.fechaFirma || ""}`}
                 InputProps={{
                   disabled: true,
                 }}
@@ -480,7 +472,7 @@ const EditaCredito = (props) => {
               <TextField
                 variant="outlined"
                 label="Medio de Pago"
-                value={credito.medioPago}
+                value={credito?.medioPago}
                 onChange={handleChangeMonto}
                 name="medioPago"
                 id="formatted-numberformat-input"
@@ -493,8 +485,8 @@ const EditaCredito = (props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={Boolean(credito.solicitudCredito)}
-                    disabled={Boolean(solicitudEditable.solicitudCredito)}
+                    checked={Boolean(credito?.solicitudCredito)}
+                    disabled={Boolean(solicitudEditable?.solicitudCredito)}
                     onChange={handleChange}
                     name="solicitudCredito"
                     color="primary"
@@ -505,8 +497,8 @@ const EditaCredito = (props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={Boolean(credito.rechazado)}
-                    disabled={Boolean(solicitudEditable.rechazado)}
+                    checked={Boolean(credito?.rechazado)}
+                    disabled={Boolean(solicitudEditable?.rechazado)}
                     onChange={handleChange}
                     name="rechazado"
                     color="primary"
@@ -517,8 +509,8 @@ const EditaCredito = (props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={Boolean(credito.preAprobado)}
-                    disabled={Boolean(solicitudEditable.preAprobado)}
+                    checked={Boolean(credito?.preAprobado)}
+                    disabled={Boolean(solicitudEditable?.preAprobado)}
                     onChange={handleChange}
                     name="preAprobado"
                     color="primary"
@@ -529,8 +521,8 @@ const EditaCredito = (props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={Boolean(credito.aprobado)}
-                    disabled={Boolean(solicitudEditable.aprobado)}
+                    checked={Boolean(credito?.aprobado)}
+                    disabled={Boolean(solicitudEditable?.aprobado)}
                     onChange={handleChange}
                     name="aprobado"
                     color="primary"
@@ -541,8 +533,8 @@ const EditaCredito = (props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={Boolean(credito.desembolsado)}
-                    disabled={Boolean(solicitudEditable.desembolsado)}
+                    checked={Boolean(credito?.desembolsado)}
+                    disabled={Boolean(solicitudEditable?.desembolsado)}
                     onChange={handleChange}
                     name="desembolsado"
                     color="primary"
@@ -553,8 +545,8 @@ const EditaCredito = (props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={Boolean(credito.cancelado)}
-                    disabled={Boolean(solicitudEditable.cancelado)}
+                    checked={Boolean(credito?.cancelado)}
+                    disabled={Boolean(solicitudEditable?.cancelado)}
                     onChange={handleChange}
                     name="cancelado"
                     color="primary"
@@ -581,16 +573,17 @@ const EditaCredito = (props) => {
                     value={true}
                     checked={
                       solicitudEditable.preAprobado !== null
-                        ? credito.solicitarDocumentos === true
-                        : credito.solicitarDocumentos === "true"
+                        ? credito?.solicitarDocumentos === true
+                        : credito?.solicitarDocumentos === "true"
                     }
                     disabled={
-                      solicitudEditable.preAprobado !== null ? true : false
+                      solicitudEditable?.preAprobado !== null ? true : false
                     }
                     control={<Radio />}
                     label="Solicitar Documentos"
                   />
                   <FormControlLabel
+                    //value={false}
                     value={false}
                     control={<Radio />}
                     checked={
@@ -599,13 +592,12 @@ const EditaCredito = (props) => {
                         : credito.solicitarDocumentos === "false"
                     }
                     disabled={
-                      solicitudEditable.preAprobado !== null ? true : false
+                      solicitudEditable?.preAprobado !== null ? true : false
                     }
                     label="No Solicitar Documentos"
                   />
                 </div>
               </RadioGroup>
-
             </FormControl>
           </Grid>
 

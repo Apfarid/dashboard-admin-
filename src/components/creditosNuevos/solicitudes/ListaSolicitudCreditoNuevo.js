@@ -3,7 +3,7 @@ import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
 import { useHistory } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
-import  { formateador } from "../../../Helper";
+import { formateador } from "../../../Helper";
 import { useDispatch, useSelector } from "react-redux";
 import { obtenerCreditoEditar } from "../../../actions/solicitudCreditoNuevoAction";
 
@@ -21,9 +21,11 @@ const SolicitudesV = () => {
   );
 
   console.log(creditosFiltrados);
-  
 
-  let creditosFiltrado = creditosFiltrados.filter(credito => credito.solicitudCredito === true && credito.solicitarDocumentos === null)
+  let creditosFiltrado = creditosFiltrados.filter(
+    (credito) =>
+      credito.solicitudCredito === true && credito.solicitarDocumentos === null
+  );
 
   let data = creditosFiltrado.map((dato) => {
     return {
@@ -36,11 +38,9 @@ const SolicitudesV = () => {
   });
 
   const redireccionarEdicion = (solicitud) => {
-    const credito = creditosFiltrados.filter(
-      (item) => item.clienteId === solicitud
-    );
+    const credito = creditosFiltrados.filter((item) => item.id === solicitud);
     dispatch(obtenerCreditoEditar(credito));
-    history.push(`/gestor-creditos/${solicitud}`);
+    history.push(`/gestion-credito`);
   };
 
   const columns = [
@@ -94,7 +94,7 @@ const SolicitudesV = () => {
           return (
             <IconButton
               aria-label="Editar"
-              onClick={() => redireccionarEdicion(tableMeta.rowData[0])}
+              onClick={() => redireccionarEdicion(tableMeta.rowData[1])}
             >
               <EditIcon buttom aria-label="Editar" disabled color="primary" />
             </IconButton>

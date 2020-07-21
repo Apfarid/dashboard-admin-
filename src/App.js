@@ -13,6 +13,7 @@ import Sidebar from "./views/layout/Sidebar";
 import GestorDatosPersonales from "./views/gestorDatos/GestorDatos";
 import InformacionPersonal from "./views/gestorDatos/InformacionPersonal";
 import GestorCreditos from "./views/gestorCreditos/DetalleCredito";
+import GestionCreditos from "./views/gestionCreditos/GestionCreditos";
 import GestorCreditoSinDocumento from "./views/gestorCreditos/sinDocumentos/GestorCreditosSinDocumentos";
 import GestorCreditoRenovacion from "./views/gestorCreditos/renovacion/GestorCreditosSinDocumentos";
 import Detalle from "./views/gestorCreditos/DetalleTotal";
@@ -69,7 +70,12 @@ const App = () => {
               />
 
               <Route exact path="/gestor-creditos" component={Detalle} />
-              <Route path="/gestor-creditos/:id" component={GestorCreditos} />
+              <Route
+                path="/gestor-creditos/:idCredito"
+                component={GestorCreditos}
+              />
+
+              <Route path="/gestion-credito" component={GestionCreditos} />
 
               <Route
                 exact

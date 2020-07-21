@@ -1,17 +1,10 @@
 import React, { useState, Fragment, useEffect } from "react";
-import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
 import { useHistory } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
-import HistoryIcon from "@material-ui/icons/History";
-import  { formateador } from "../../../Helper";
-import InfoIcon from "@material-ui/icons/Info";
-import { Link as Lino } from "react-router-dom";
-import Link from "@material-ui/core/Link";
+import { formateador } from "../../../Helper";
 import { useDispatch, useSelector } from "react-redux";
-import DatosListaSolicitudCreditoNuevo from './DatosListaConDocumetosCreditoNuevo'
 import { obtenerCreditoEditar } from "../../../actions/solicitudCreditoNuevoAction";
 
 const SolicitudesV = () => {
@@ -25,19 +18,20 @@ const SolicitudesV = () => {
 
   const creditosFiltrados = useSelector(
     (state) => state.solicitudCreditosNuevos.solicitudes
-  );  
+  );
 
-  let creditosFiltrado = creditosFiltrados.filter(credito => 
-    credito.solicitudCredito === true &&
-    credito.rechazado === null &&
-    credito.solicitarDocumentos === true &&
-    credito.preAprobado === true &&
-    credito.aprobado === null &&
-    credito.desembolsado === null &&
-    credito.cancelado === null &&
-    credito.reFinanciado === null &&
-    credito.desertado === null
-  )
+  let creditosFiltrado = creditosFiltrados.filter(
+    (credito) =>
+      credito.solicitudCredito === true &&
+      credito.rechazado === null &&
+      credito.solicitarDocumentos === true &&
+      credito.preAprobado === true &&
+      credito.aprobado === null &&
+      credito.desembolsado === null &&
+      credito.cancelado === null &&
+      credito.reFinanciado === null &&
+      credito.desertado === null
+  );
 
   let data = creditosFiltrado.map((dato) => {
     return {
@@ -50,11 +44,10 @@ const SolicitudesV = () => {
   });
 
   const redireccionarEdicion = (solicitud) => {
-    const credito = creditosFiltrados.filter(
-      (item) => item.clienteId === solicitud
-    );
+    const credito = creditosFiltrados.filter((item) => item.id === solicitud);
+
     dispatch(obtenerCreditoEditar(credito));
-    history.push(`/gestor-creditos/${solicitud}`);
+    history.push(`/gestion-credito`);
   };
 
   const columns = [
@@ -108,7 +101,7 @@ const SolicitudesV = () => {
           return (
             <IconButton
               aria-label="Editar"
-              onClick={() => redireccionarEdicion(tableMeta.rowData[0])}
+              onClick={() => redireccionarEdicion(tableMeta.rowData[1])}
             >
               <EditIcon buttom aria-label="Editar" disabled color="primary" />
             </IconButton>
@@ -143,4 +136,3 @@ const SolicitudesV = () => {
 };
 
 export default SolicitudesV;
-

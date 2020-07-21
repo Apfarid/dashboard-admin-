@@ -3,7 +3,7 @@ import MUIDataTable from "mui-datatables";
 import IconButton from "@material-ui/core/IconButton";
 import { useHistory } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
-import  { formateador } from "../../../Helper";
+import { formateador } from "../../../Helper";
 import { useDispatch, useSelector } from "react-redux";
 import { obtenerCreditoEditar } from "../../../actions/solicitudCreditoNuevoAction";
 
@@ -21,16 +21,13 @@ const SolicitudesV = () => {
   );
 
   console.log(cantidadCreditos);
-  
-
 
   let creditosFiltrados = cantidadCreditos.filter(
-    (credito) =>  
-    credito.solicitudCredito === true 
-    && credito.aprobado === true
-    && credito.cancelado === null
+    (credito) =>
+      credito.solicitudCredito === true &&
+      credito.aprobado === true &&
+      credito.cancelado === null
   );
-
 
   let data = creditosFiltrados.map((dato) => {
     return {
@@ -43,12 +40,11 @@ const SolicitudesV = () => {
   });
 
   const redireccionarEdicion = (solicitud) => {
-    
     const credito = creditosFiltrados.filter(
       (item) => item.clienteId === solicitud
     );
     dispatch(obtenerCreditoEditar(credito));
-    history.push(`/gestor-creditos/${solicitud}`);
+    history.push(`/gestion-credito`);
   };
 
   const columns = [
@@ -137,4 +133,3 @@ const SolicitudesV = () => {
 };
 
 export default SolicitudesV;
-
