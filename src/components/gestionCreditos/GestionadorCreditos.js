@@ -31,6 +31,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import shortid from "shortid";
+import format from "date-fns/format";
 
 function NumberFormatCustom(props) {
   const { inputRef, onChange, ...other } = props;
@@ -77,7 +78,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fecha = new Date();
+let fecha = new Date();
+fecha.setMinutes(fecha.getMinutes() + fecha.getTimezoneOffset());
+
+fecha = format(new Date(fecha), "MM/dd/yyyy");
 
 const EditaCredito = (props) => {
   const classes = useStyles();
@@ -87,8 +91,6 @@ const EditaCredito = (props) => {
   const solicitudEditable = useSelector(
     (state) => state.solicitudCreditosNuevos.creditoeditar[0]
   );
-
-  console.log(solicitudEditable);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -109,16 +111,48 @@ const EditaCredito = (props) => {
       return;
     }
 
+    if (
+      credito?.solicitarDocumentos === true &&
+      credito?.preAprobado === null
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No puedes solicitar documentos sin pre aprobar",
+      });
+      return;
+    }
+
+    if (valosSolicitado > credito.valorAprobado) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "El valor aprobado no debe ser superio al monto solicitado",
+      });
+      return;
+    }
+
     dispatch(editarCreditoAction(credito));
 
     history.push("/");
   };
 
   const handleChangeRadio = (e) => {
-    setCredito({
-      ...credito,
-      solicitarDocumentos: e.target.value,
-    });
+    if (e.target.checked === true) {
+      setCredito({
+        ...credito,
+        solicitarDocumentos: true,
+        fechaPreaprobado: fecha,
+        preAprobado: true,
+      });
+    } else {
+      setCredito({
+        ...credito,
+        solicitarDocumentos: null,
+        fechaPreaprobado: null,
+        preAprobado: null,
+      });
+    }
   };
 
   const handleChange = (e) => {
@@ -559,45 +593,19 @@ const EditaCredito = (props) => {
 
           <Grid item xs={12} sm={12} md={6}>
             <FormControl component="fieldset">
-              <FormLabel component="legend">
-                Requiere Adjuntar Archivos:
-              </FormLabel>
-              <RadioGroup
-                aria-label="documentos"
-                name="solicitarDocumentos"
-                onChange={handleChangeRadio}
-                value={credito.solicitarDocumentos}
-              >
-                <div className={classes.radio}>
-                  <FormControlLabel
-                    value={true}
-                    checked={
-                      solicitudEditable.preAprobado !== null
-                        ? credito?.solicitarDocumentos === true
-                        : credito?.solicitarDocumentos === "true"
-                    }
-                    disabled={
-                      solicitudEditable?.preAprobado !== null ? true : false
-                    }
-                    control={<Radio />}
-                    label="Solicitar Documentos"
+              <FormLabel component="legend">Requisitos</FormLabel>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={Boolean(credito?.solicitarDocumentos)}
+                    disabled={Boolean(solicitudEditable?.solicitarDocumentos)}
+                    onChange={handleChangeRadio}
+                    name="solicitarDocumentos"
+                    color="primary"
                   />
-                  <FormControlLabel
-                    //value={false}
-                    value={false}
-                    control={<Radio />}
-                    checked={
-                      solicitudEditable.preAprobado !== null
-                        ? credito.solicitarDocumentos === false
-                        : credito.solicitarDocumentos === "false"
-                    }
-                    disabled={
-                      solicitudEditable?.preAprobado !== null ? true : false
-                    }
-                    label="No Solicitar Documentos"
-                  />
-                </div>
-              </RadioGroup>
+                }
+                label="Solicitar documentos:"
+              />
             </FormControl>
           </Grid>
 
