@@ -123,15 +123,6 @@ const EditaCredito = (props) => {
       return;
     }
 
-    if (valosSolicitado > credito.valorAprobado) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "El valor aprobado no debe ser superio al monto solicitado",
-      });
-      return;
-    }
-
     dispatch(editarCreditoAction(credito));
 
     history.push("/");

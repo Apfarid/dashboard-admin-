@@ -11,6 +11,7 @@ import {
   VER_CREDITOS_GENERAL_ERROR,
 } from "../types";
 import ClienteAxios from "../config/axios";
+import Swal from "sweetalert2";
 
 export function solicitudNuevos() {
   return async (dispatch) => {
@@ -53,12 +54,16 @@ const obtenerCreditoAction = (credito) => ({
 
 // Edita un registro en la api y state
 export function editarCreditoAction(credito) {
-  console.log(credito);
+  console.log(credito.id);
   return async (dispatch) => {
     dispatch(editarCredito());
     try {
-      await ClienteAxios.put(`/credito-admin/${credito.cliente.id}`, credito);
+      const respuesta = await ClienteAxios.put(
+        `/credito-admin/${credito.clienteId}`,
+        credito
+      );
       dispatch(editarCreditoExito(credito));
+      Swal.fire("Aplicado!", respuesta.data.mensaje, "success");
     } catch (error) {
       console.log(error);
       console.log("salio mal");

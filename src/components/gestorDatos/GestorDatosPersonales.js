@@ -11,7 +11,7 @@ import { Link as Lino } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 import clienteAxios from "../../config/axios";
 import { useDispatch, useSelector } from "react-redux";
-import {obtenerInformacionEditar} from '../../actions/cliente'
+import { obtenerInformacionEditar } from "../../actions/cliente";
 import { useHistory } from "react-router-dom";
 
 const GestorDatosPersonales = () => {
@@ -19,41 +19,31 @@ const GestorDatosPersonales = () => {
   const dispatch = useDispatch();
   const [informacionCliente, setInformacionCliente] = useState([]);
 
-  const clienteInfo = useSelector(
-    (state) => state.cliente.clientes
-  );
+  const clienteInfo = useSelector((state) => state.cliente.clientes);
 
   console.log(clienteInfo.usuario);
-  
 
-  let listaCliente = clienteInfo.map( cliente => {
- 
-    return{
+  let listaCliente = clienteInfo.map((cliente) => {
+    return {
       id: cliente.id,
-      cedula: cliente.cedula,
-      nombres : cliente.nombres,
-      apellidos : cliente.apellidos,
-      correo: cliente.usuario.email
-    }
-  })
+      cedula: cliente?.cedula,
+      nombres: cliente?.nombres,
+      apellidos: cliente?.apellidos,
+      correo: cliente?.usuario?.email,
+    };
+  });
 
   console.log(clienteInfo);
-  
-  const redireccionarEdicion = (id) => {
-    const cliente = clienteInfo.filter(
-      (cliente) => cliente.id === id
-    );
-    dispatch(obtenerInformacionEditar(cliente));
-    history.push(
-      `informacion-personal/${id}`
-    );
-  };
 
+  const redireccionarEdicion = (id) => {
+    const cliente = clienteInfo.filter((cliente) => cliente.id === id);
+    dispatch(obtenerInformacionEditar(cliente));
+    history.push(`informacion-personal/${id}`);
+  };
 
   useEffect(() => {
     setInformacionCliente(listaCliente);
   }, []);
-
 
   const columns = [
     {
@@ -94,7 +84,6 @@ const GestorDatosPersonales = () => {
         filter: true,
       },
     },
-
 
     {
       name: "Gestionar",

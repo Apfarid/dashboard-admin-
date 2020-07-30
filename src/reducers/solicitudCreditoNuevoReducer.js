@@ -12,6 +12,7 @@ const initialState = {
   error: false,
   loading: false,
   solicitudes: [],
+  cosa: null,
   creditoeditar: null,
 };
 

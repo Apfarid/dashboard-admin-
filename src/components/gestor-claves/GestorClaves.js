@@ -13,13 +13,11 @@ import clienteAxios from "../../config/axios";
 import { useSelector } from "react-redux";
 
 const GestorDatosPersonales = () => {
-
-  const [clientes, setClientes] = useState([ ]);
+  const [clientes, setClientes] = useState([]);
 
   const firmas = useSelector((state) => state.numeroCreditos.contador);
 
   console.log(firmas);
-  
 
   let data = firmas.map((dato) => {
     return {
@@ -28,7 +26,7 @@ const GestorDatosPersonales = () => {
       nombre: dato?.cliente?.nombres + " " + dato?.cliente?.apellidos,
       claveCorta: dato?.firmaCorta,
       claveLarga: dato?.firmaLarga,
-      fechaCreacion: dato?.fechaFirma,
+      fechaCreacion: dato?.fechaAprobado,
     };
   });
 
@@ -46,21 +44,21 @@ const GestorDatosPersonales = () => {
     },
 
     {
-      label:"Consecutivo",
+      label: "Consecutivo",
       name: "consecutivo",
       options: {
         filter: true,
       },
     },
     {
-      label:"Nombre",
+      label: "Nombre",
       name: "nombre",
       options: {
         filter: true,
       },
     },
     {
-      label:"Clave Corta",
+      label: "Clave Corta",
       name: "claveCorta",
       options: {
         filter: true,
@@ -68,7 +66,7 @@ const GestorDatosPersonales = () => {
     },
 
     {
-      label:"Clave Larga",
+      label: "Clave Larga",
       name: "claveLarga",
       options: {
         filter: true,
@@ -76,12 +74,12 @@ const GestorDatosPersonales = () => {
     },
 
     {
-      name: "Fecha de Creacion",
+      label: "Fecha de Creacion",
+      name: "fechaCreacion",
       options: {
         filter: true,
       },
     },
-
   ];
 
   const options = {
